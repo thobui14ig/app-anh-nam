@@ -1,4 +1,4 @@
-import './Calendar.css';
+import './calendar.css';
 
 import type { CalendarOptions, EventClickArg } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
