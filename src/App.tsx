@@ -7,6 +7,7 @@ import LeftMenu from './components/LeftMenu';
 import Login from './pages/Auth/Login';
 import LayoutChat from './pages/Chat/Layout';
 import TaskLayout from './pages/Task/TaskLayout';
+import useSocket from './Socket/useSocket';
 
 function App() {
   const elements = useRoutes([
@@ -25,6 +26,7 @@ function App() {
     // },
   ]);
 
+  useSocket();
   const token = localStorage.getItem('accessToken');
   if (!token) {
     return <Login />;

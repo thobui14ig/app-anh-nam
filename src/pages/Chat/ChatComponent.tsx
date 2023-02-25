@@ -1,62 +1,72 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
+import ScrollToBottom from 'react-scroll-to-bottom';
 
 import { getMessages, MessageType, sendMessage } from '../../api/Chat/chat';
 import { useChat } from '../../context/app.context';
 import { getUserLocal } from '../../helper';
-// import { ScrollToBottom } from 'react-scroll-to-bottom';
+import { RootState } from '../../stores/store';
 
 const ChatComponent = () => {
   const { roomId, receiveId } = useChat();
   const [messages, setMessages] = useState<MessageType[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const user = getUserLocal();
-  console.log(111, roomId);
+  const { socket: currentSocket } = useSelector((state: RootState) => state.socket);
+  const messagesRef = useRef<HTMLDivElement>(null);
+  const [isRender, setIsrender] = useState({
+    render: false,
+  });
 
   useEffect(() => {
     if (roomId) {
       const fetch = async () => {
         const { data } = await getMessages(roomId as string);
+
         setMessages(data?.messages);
       };
 
       fetch();
     }
-  }, [roomId]);
+  }, [roomId, isRender]);
 
-  const messagesRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (currentSocket) {
+      currentSocket?.on('sendDataServer', (data: any) => {
+        const { render } = data;
+        if (render) {
+          setIsrender({ render: !isRender.render });
+        }
+        // setMessages((oldMsgs) => [...oldMsgs, dataGot.data]);
+      });
+    }
+  }, [currentSocket]);
 
   const handleMessageSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     if (newMessage.length > 0) {
-      setNewMessage('');
       const values = {
         content: newMessage,
         roomId,
         receiveId,
       };
       await sendMessage(values);
-      //set lai messages
-      setMessages((pre: MessageType[]) => {
-        const message: MessageType = {
-          _id: String(new Date().getTime()),
-          content: newMessage,
-          createdBy: {
-            _id: user._id,
-            email: 'string',
-            name: 'string',
-            createdAt: 'Date',
-            updatedAt: 'Date',
-          },
-        };
-        return [...pre, message];
+      currentSocket.emit('sendMessage', {
+        senderId: user._id,
+        text: newMessage,
+        receiveId,
       });
+      setNewMessage('');
     }
   };
 
   return (
     <div className="bg-gray-100 flex-grow flex flex-col">
       <h1 className="text-xl mb-4">Chat Component</h1>
-      <div className="border border-gray-300 flex-grow mb-4 p-2 overflow-y-scroll">
+      <ScrollToBottom
+        className="border border-gray-300 flex-grow mb-4 p-2 overflow-y-scroll"
+        ref={messagesRef}
+      >
         {messages.map((message: MessageType) => (
           <div
             key={message._id}
@@ -73,16 +83,14 @@ const ChatComponent = () => {
               <div
                 className={`${
                   message.createdBy._id === user._id ? 'bg-blue-500' : 'bg-gray-300'
-                } rounded-lg py-2 px-4 text-white max-w-xs break-words`}
+                } rounded-lg py-2 px-4 text-gray-900 max-w-xs break-words`}
               >
                 {message.content}
               </div>
             </div>
           </div>
         ))}
-
-        <div ref={messagesRef} />
-      </div>
+      </ScrollToBottom>
       <div className="flex">
         <div className="flex-grow flex items-stretch">
           <input

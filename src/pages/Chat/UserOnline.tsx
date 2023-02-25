@@ -12,10 +12,14 @@ const users = [
 const UserOnline = () => {
   const { handleGetCurrentChat } = useUserOnline();
   return (
-    <div className="bg-gray-200 w-1/4 p-4">
-      <h1 className="text-xl mb-4">User List</h1>
-      <div className="text-gray-700 font-medium pb-2">Users online</div>
-      <ul>
+    <div className="bg-gray-200 w-1/3 p-4">
+      <div
+        style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+      >
+        <div className="text-gray-700 font-medium pb-2">Danh sách tin nhắn</div>
+        <button className="text-gray-700 font-medium pb-2">+</button>
+      </div>
+      <ul className="mt-6">
         {users.map((user: any) => {
           return (
             <li
