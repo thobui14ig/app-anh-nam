@@ -13,7 +13,9 @@ class Http {
       timeout: 10000,
       headers: {
         x_authorization: this.accessToken,
+        Accept: 'application/json',
         'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + this.accessToken,
       },
       data: {
         refreshToken: this.refreshToken,
