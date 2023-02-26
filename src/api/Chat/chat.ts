@@ -26,3 +26,6 @@ export const sendMessage = (values: any) =>
 
 export const getMessages = (roomId: string) =>
   http.get<MessagesType>(`/chat-room/get-messages/${roomId}`);
+
+export const getListChatUser = (userId: string) =>
+  http.get<any>(`/chat-room/list-rooms/${userId}`);

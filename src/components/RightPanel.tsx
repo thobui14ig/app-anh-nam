@@ -33,7 +33,7 @@ const RightPanel = ({ handleCloseRightPanel }: any) => {
   }
 
   return (
-    <div className="w-full bg-white rounded-lg shadow-md p-4 absolute top-0 right-0 h-screen">
+    <div className="w-full bg-white rounded-lg shadow-md p-4 absolute top-0 right-0 h-screen pt-20">
       <form onSubmit={handleFormSubmit}>
         <div className="mb-4">
           <label htmlFor="title" className="block text-gray-700 font-bold mb-2">
@@ -52,7 +52,6 @@ const RightPanel = ({ handleCloseRightPanel }: any) => {
             Assigned
           </label>
           <Select
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             showSearch
             placeholder="Select a person"
             optionFilterProp="children"
