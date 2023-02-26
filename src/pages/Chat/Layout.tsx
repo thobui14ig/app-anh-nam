@@ -1,12 +1,12 @@
 import ChatProvider from '../../context/app.context';
-import ChatComponent from './ChatComponent';
-import UserOnline from './UserOnline';
+import ListMessage from './components/Chat-room/UserOnline';
+import ChatComponent from './components/ChatComponent';
 
 const LayoutChat = () => {
   return (
     <ChatProvider>
       <ChatComponent />
-      <UserOnline />
+      <ListMessage />
     </ChatProvider>
   );
 };

@@ -2,10 +2,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import ScrollToBottom from 'react-scroll-to-bottom';
 
-import { getMessages, MessageType, sendMessage } from '../../api/Chat/chat';
-import { useChat } from '../../context/app.context';
-import { getUserLocal } from '../../helper';
-import { RootState } from '../../stores/store';
+import { getMessages, MessageType, sendMessage } from '../../../api/Chat/chat';
+import { useChat } from '../../../context/app.context';
+import { getUserLocal } from '../../../helper';
+import { RootState } from '../../../stores/store';
 
 const ChatComponent = () => {
   const { roomId, receiveId } = useChat();
@@ -65,7 +65,7 @@ const ChatComponent = () => {
       <h1 className="text-xl mb-4">Chat Component</h1>
       <ScrollToBottom
         className="border border-gray-300 flex-grow mb-4 p-2 overflow-y-scroll"
-        ref={messagesRef}
+        // ref={messagesRef}
       >
         {messages.map((message: MessageType) => (
           <div

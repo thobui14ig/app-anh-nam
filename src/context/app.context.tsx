@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import React, { useContext, useEffect, useState } from 'react';
-import { Socket } from 'socket.io-client';
+import React, { useContext, useState } from 'react';
+import { useSelector } from 'react-redux';
+
+import { getUserLocal } from '../helper';
+import { RootState } from '../stores/store';
 interface ChatState {
   messages: any;
   setMessages: any;
@@ -8,6 +11,15 @@ interface ChatState {
   setRoomId: any;
   receiveId: string | null;
   setReceive: any;
+  isModalOpen: any;
+  setIsModalOpen: any;
+  showModal: any;
+  handleOk: any;
+  handleCancel: any;
+  screen: any;
+  setScreen: any;
+  listUsers: any;
+  currentUser: any;
 }
 
 export const ChatContext = React.createContext<ChatState>({
@@ -17,12 +29,42 @@ export const ChatContext = React.createContext<ChatState>({
   setRoomId: undefined,
   receiveId: null,
   setReceive: undefined,
+  isModalOpen: undefined,
+  setIsModalOpen: undefined,
+  showModal: undefined,
+  handleOk: undefined,
+  handleCancel: undefined,
+  screen: undefined,
+  setScreen: undefined,
+  listUsers: undefined,
+  currentUser: undefined,
 });
+
+export enum SCREEN_TYPE {
+  USER = 1,
+  GROUP = 2,
+}
 
 const ChatProvider = ({ children }: any) => {
   const [messages, setMessages] = useState([]);
   const [roomId, setRoomId] = useState(null);
   const [receiveId, setReceive] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [screen, setScreen] = useState(SCREEN_TYPE.USER);
+  const { listUsers } = useSelector((state: RootState) => state.resource);
+  const currentUser = getUserLocal();
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
 
   const values = {
     messages,
@@ -31,6 +73,15 @@ const ChatProvider = ({ children }: any) => {
     setRoomId,
     receiveId,
     setReceive,
+    isModalOpen,
+    setIsModalOpen,
+    showModal,
+    handleOk,
+    handleCancel,
+    screen,
+    setScreen,
+    listUsers,
+    currentUser,
   };
 
   return <ChatContext.Provider value={values}>{children}</ChatContext.Provider>;

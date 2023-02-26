@@ -37,6 +37,14 @@ button {
   color: white;
 }
 
+.ant-select {
+  width: 100%;
+}
+
+.ant-btn{
+  background: #1677ff;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
