@@ -1,0 +1,266 @@
+import 'devextreme-react/text-area';
+
+import CustomStore from 'devextreme/data/custom_store';
+import DataGrid, {
+  Column,
+  Editing,
+  FormItem,
+  Lookup,
+  Scrolling,
+} from 'devextreme-react/data-grid';
+import React, { useRef } from 'react';
+import { useEffect, useState } from 'react';
+
+import TaskType, { getTasks, insertTask } from '../../api/Tasks/tasks.api';
+import { useTask } from '../../context/task.context';
+
+const URL = 'http://localhost:9000/tasks';
+const notesEditorOptions = { height: 200 };
+
+const ReportHOC = () => {
+  const [tasks, setTasks] = useState<TaskType[]>([]);
+  const [isRender, setIsRender] = useState<boolean>(false);
+
+  useEffect(() => {
+    const fetch = async () => {
+      const data = await getTasks();
+      setTasks(data?.data);
+    };
+
+    fetch();
+  }, [isRender]);
+
+  return (
+    <React.Fragment>
+      {tasks.length > 0 && (
+        <Report tasks={tasks} setIsRender={setIsRender} isRender={isRender} />
+      )}
+    </React.Fragment>
+  );
+};
+
+function Report({ tasks, setIsRender, isRender }: any) {
+  const dataGridRef = useRef();
+  const [ordersData, setOrdersData] = useState(
+    new CustomStore({
+      key: '_id',
+      load: () => tasks,
+      insert: async (values: Record<string, any>) => {
+        const data = await insertTask(values);
+        return data;
+      },
+      update: (key: any, values: Record<string, any>) => {
+        console.log(333, values);
+        return sendRequest(`${URL}/UpdateOrder`, 'PUT', {
+          key,
+          values: JSON.stringify(values),
+        });
+      },
+
+      remove: (key: any) => {
+        console.log(333, key);
+        return sendRequest(`${URL}/DeleteOrder`, 'DELETE', {
+          key,
+        });
+      },
+    }),
+  );
+  const { users } = useTask();
+
+  function sendRequest(url: string, method = 'GET', data = {}): Promise<any> {
+    if (method === 'GET') {
+      return fetch(url, {
+        method,
+        credentials: 'include',
+      }).then((result) =>
+        result.json().then((json) => {
+          if (result.ok) return json.data;
+          throw json.Message;
+        }),
+      );
+    }
+
+    alert();
+    const params = Object.keys(data)
+      .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
+      .join('&');
+
+    return fetch(url, {
+      method,
+      body: params,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+      },
+      credentials: 'include',
+    }).then((result) => {
+      if (result.ok) {
+        return result.text().then((text) => text && JSON.parse(text));
+      }
+      return result.json().then((json) => {
+        throw json.Message;
+      });
+    });
+  }
+
+  return (
+    <>
+      <DataGrid
+        id="grid"
+        showBorders={true}
+        dataSource={ordersData}
+        ref={dataGridRef}
+        dataSourceChanged={() => {
+          dataGridRef.current.instance.repaint();
+        }}
+      >
+        <Editing
+          mode="popup"
+          allowAdding={true}
+          allowDeleting={true}
+          allowUpdating={true}
+        />
+
+        <Scrolling mode="virtual" />
+        <Column dataField="title"></Column>
+        <Column dataField="description">
+          <FormItem
+            colSpan={2}
+            editorType="dxTextArea"
+            editorOptions={notesEditorOptions}
+          />
+        </Column>
+
+        <Column dataField="startDay" dataType="date"></Column>
+
+        <Column dataField="endDay" dataType="date"></Column>
+
+        <Column dataField="assigne" caption="assigne" width={125}>
+          <Lookup dataSource={users} displayExpr="name" valueExpr="_id" />
+        </Column>
+      </DataGrid>
+    </>
+  );
+}
+
+export default ReportHOC;
+
+
+
+import CustomStore from 'devextreme/data/custom_store';
+import { formatDate } from 'devextreme/localization';
+import { Button } from 'devextreme-react/button';
+import {
+  Column,
+  DataGrid,
+  Editing,
+  Lookup,
+  Scrolling,
+  Summary,
+  TotalItem,
+} from 'devextreme-react/data-grid';
+import { SelectBox } from 'devextreme-react/select-box';
+import React, { useState } from 'react';
+
+import { getTasks, insertTask } from '../../api/Tasks/tasks.api';
+
+const URL = 'http://localhost:9000/tasks';
+
+const REFRESH_MODES = ['full', 'reshape', 'repaint'];
+
+function ReportHOC() {
+  const [ordersData] = useState(
+    new CustomStore({
+      key: '_id',
+      load: () => sendRequest(`${URL}`),
+      insert: (values) =>
+        sendRequest(`${URL}`, 'POST', {
+          values,
+        }),
+      update: (key, values) =>
+        sendRequest(`${URL}/UpdateOrder`, 'PUT', {
+          key,
+          values: JSON.stringify(values),
+        }),
+      remove: (key) =>
+        sendRequest(`${URL}/DeleteOrder`, 'DELETE', {
+          key,
+        }),
+    }),
+  );
+
+  const [customersData] = useState(
+    new CustomStore({
+      key: 'Value',
+      loadMode: 'raw',
+      load: () => sendRequest(`${URL}/CustomersLookup`),
+    }),
+  );
+
+  const [shippersData] = useState(
+    new CustomStore({
+      key: 'Value',
+      loadMode: 'raw',
+      load: () => sendRequest(`${URL}/ShippersLookup`),
+    }),
+  );
+
+  const [requests, setRequests] = useState([]);
+  const [refreshMode, setRefreshMode] = useState('reshape');
+
+  async function sendRequest(url, method = 'GET', data = {}) {
+    logRequest(method, url, data);
+
+    if (method === 'GET') {
+      const { data } = await getTasks();
+      return data;
+    }
+
+    const params = Object.keys(data)
+      .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
+      .join('&');
+
+    return insertTask(data).then((res) => {
+      return res;
+    });
+  }
+
+  function logRequest(method, url, data) {
+    const args = Object.keys(data || {})
+      .map((key) => `${key}=${data[key]}`)
+      .join(' ');
+
+    const time = formatDate(new Date(), 'HH:mm:ss');
+    const request = [time, method, url.slice(URL.length), args].join(' ');
+
+    setRequests((prevRequests) => [request, ...prevRequests]);
+  }
+
+  return (
+    <React.Fragment>
+      <DataGrid
+        id="grid"
+        showBorders={true}
+        dataSource={ordersData}
+        repaintChangesOnly={true}
+      >
+        <Editing
+          refreshMode={refreshMode}
+          mode="popup"
+          allowAdding={true}
+          allowDeleting={true}
+          allowUpdating={true}
+        />
+
+        <Scrolling mode="virtual" />
+
+        <Column dataField="title"></Column>
+
+        <Column dataField="startDay" dataType="date"></Column>
+
+        <Column dataField="endDay" dataType="date"></Column>
+      </DataGrid>
+    </React.Fragment>
+  );
+}
+
+export default ReportHOC;

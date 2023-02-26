@@ -1,7 +1,9 @@
+import 'devextreme/dist/css/dx.light.css';
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import './App.css';
 import 'antd/dist/reset.css';
+import 'devextreme/dist/css/dx.light.css';
+import './App.css';
 
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
@@ -16,7 +18,7 @@ import LayoutChat from './pages/Chat/Layout';
 import ReportLayout from './pages/Report';
 import TaskLayout from './pages/Task/TaskLayout';
 import useSocket from './Socket/useSocket';
-import { setListUsers } from './stores/resource-store';
+import { setListUsers, setUsers } from './stores/resource-store';
 
 function App() {
   const dispatch = useDispatch();
@@ -53,6 +55,7 @@ function App() {
       const users = await getUsers();
       const usersHasmap = hasmapUser(users?.data);
       dispatch(setListUsers(usersHasmap));
+      dispatch(setUsers(users?.data));
     };
     fetch();
   }, []);
