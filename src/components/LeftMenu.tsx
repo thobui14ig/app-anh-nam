@@ -14,6 +14,9 @@ const LeftMenu = () => {
         <li className="mb-4">
           <Link to="message">Message</Link>
         </li>
+        <li className="mb-4">
+          <Link to="report">Report</Link>
+        </li>
       </ul>
     </div>
   );

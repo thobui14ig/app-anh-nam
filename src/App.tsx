@@ -13,6 +13,7 @@ import LeftMenu from './components/LeftMenu';
 import { getUserLocal, hasmapUser } from './helper';
 import Login from './pages/Auth/Login';
 import LayoutChat from './pages/Chat/Layout';
+import ReportLayout from './pages/Report';
 import TaskLayout from './pages/Task/TaskLayout';
 import useSocket from './Socket/useSocket';
 import { setListUsers } from './stores/resource-store';
@@ -32,6 +33,10 @@ function App() {
     {
       path: '/task',
       element: <TaskLayout />,
+    },
+    {
+      path: '/report',
+      element: <ReportLayout />,
     },
     // },
   ]);
