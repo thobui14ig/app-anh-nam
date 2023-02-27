@@ -3,7 +3,6 @@
 import 'devextreme-react/text-area';
 
 import CustomStore from 'devextreme/data/custom_store';
-import Button from 'devextreme/ui/button';
 import {
   Column,
   DataGrid,
@@ -15,11 +14,12 @@ import React, { useState } from 'react';
 
 import { deleteTasks, getTasks, insertTask, updateTask } from '../../api/Tasks/tasks.api';
 import { useWorkList } from '../../context/work-list.context';
+import ModalDetails from './components/ModalDetail';
 import ModalUploadFileUpload from './components/ModalUploadFileReport';
 const notesEditorOptions = { height: 200 };
 
 function WorkList() {
-  const { users, showModal, handleCancel, handleOk, isModalOpen } = useWorkList();
+  const { users, showModal, setIsModalDetailOpen } = useWorkList();
 
   const [ordersData] = useState(
     new CustomStore({
@@ -72,6 +72,17 @@ function WorkList() {
     );
   };
 
+  const details = (data: any) => {
+    return (
+      <div
+        className="cursor-pointer text-sky-400"
+        onClick={() => setIsModalDetailOpen(true)}
+      >
+        Chi tiết
+      </div>
+    );
+  };
+
   return (
     <React.Fragment>
       <DataGrid
@@ -80,10 +91,10 @@ function WorkList() {
         dataSource={ordersData}
         repaintChangesOnly={true}
       >
-        <Scrolling mode="virtual" />
+        <Scrolling mode="virtual" useNative={true} />
 
-        <Column dataField="title" caption="Tiêu đề"></Column>
-        <Column dataField="description">
+        <Column dataField="title" caption="Tiêu đề" fixed={true} width={300}></Column>
+        <Column dataField="description" visible={false}>
           <FormItem
             colSpan={2}
             editorType="dxTextArea"
@@ -96,6 +107,7 @@ function WorkList() {
           dataType="date"
           caption="Ngày bắt đầu"
           format="dd/MM/yyyy"
+          width={150}
         ></Column>
 
         <Column
@@ -103,10 +115,8 @@ function WorkList() {
           dataType="date"
           caption="Ngày kết thúc"
           format="dd/MM/yyyy"
+          width={150}
         ></Column>
-        <Column dataField="assigne" caption="assigne" width={125}>
-          <Lookup dataSource={users} displayExpr="name" valueExpr="_id" />
-        </Column>
         <Column dataField="createdBy" caption="Người tạo" width={125}>
           <Lookup dataSource={users} displayExpr="name" valueExpr="_id" />
         </Column>
@@ -115,11 +125,14 @@ function WorkList() {
           dataType="date"
           caption="Ngày tạo"
           format="dd/MM/yyyy"
+          width={150}
         ></Column>
-        <Column dataField="isUpload" caption="Upload" dataType="boolean"></Column>
-        <Column caption="Chi tiết" width={100} cellComponent={cellComponent} />
+        {/* <Column dataField="isUpload" caption="Upload" dataType="boolean"></Column> */}
+        <Column caption="File" width={100} cellComponent={cellComponent} />
+        <Column caption="Chi tiết" width={100} cellComponent={details} />
       </DataGrid>
       <ModalUploadFileUpload />
+      <ModalDetails />
     </React.Fragment>
   );
 }

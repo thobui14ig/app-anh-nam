@@ -5,7 +5,6 @@ import { useChat } from '../../../context/app.context';
 export const useListMessageUser = () => {
   const [listChats, setListChats] = useState([]);
   const { currentUser } = useChat();
-  console.log(33333);
 
   useEffect(() => {
     const fetch = async () => {

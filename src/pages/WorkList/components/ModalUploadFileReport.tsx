@@ -42,7 +42,7 @@ const ModalUploadFileUpload: React.FC = () => {
     multiple: true,
   };
   useEffect(() => {
-    console.log(111);
+    setFileList([]);
   }, [isModalOpen]);
 
   useEffect(() => {

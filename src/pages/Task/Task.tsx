@@ -5,8 +5,10 @@ import {
   Column,
   DataGrid,
   Editing,
+  FilterRow,
   Form,
   FormItem,
+  HeaderFilter,
   Lookup,
   Scrolling,
 } from 'devextreme-react/data-grid';
@@ -67,6 +69,8 @@ function Task() {
         dataSource={ordersData}
         repaintChangesOnly={true}
       >
+        <HeaderFilter visible={true} />
+        <FilterRow visible={true} />
         <Editing
           mode="popup"
           allowAdding={true}
