@@ -16,6 +16,7 @@ import { getUserLocal, hasmapUser } from './helper';
 import Login from './pages/Auth/Login';
 import LayoutChat from './pages/Chat/Layout';
 import ReportLayout from './pages/Task';
+import TaskLayout from './pages/Taskxx/TaskLayout';
 import WorkListLayout from './pages/WorkList';
 import useSocket from './Socket/useSocket';
 import { setListUsers, setUsers } from './stores/resource-store';
@@ -40,6 +41,7 @@ function App() {
       path: '/task',
       element: <ReportLayout />,
     },
+
     // },
   ]);
 
@@ -67,7 +69,7 @@ function App() {
   return (
     <div className="flex flex-col h-screen w-screen">
       <div className="flex flex-row items-center justify-between h-16 px-4 bg-gray-800 text-white fixed top-0 left-0 right-0 z-10">
-        <div>Nguyễn Nam Anh</div>
+        <div>WEBSITE</div>
         <div className="flex-grow"></div>
         <div className="cursor-pointer mr-4">
           <span>{currentUser?.name}</span>

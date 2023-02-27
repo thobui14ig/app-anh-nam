@@ -12,32 +12,20 @@ import {
 } from 'devextreme-react/data-grid';
 import React, { useState } from 'react';
 
-import { deleteTasks, getTasks, insertTask, updateTask } from '../../api/Tasks/tasks.api';
+import { getTasks } from '../../api/Tasks/tasks.api';
 import { useWorkList } from '../../context/work-list.context';
+import TASKLIST from '../../type/task.type';
 import ModalDetails from './components/ModalDetail';
-import ModalUploadFileUpload from './components/ModalUploadFileReport';
 const notesEditorOptions = { height: 200 };
 
 function WorkList() {
-  const { users, showModal, setIsModalDetailOpen } = useWorkList();
+  const { users, setIsModalDetailOpen } = useWorkList();
+  const [dataModal, setDataModal] = useState<TASKLIST | null>(null);
 
   const [ordersData] = useState(
     new CustomStore({
       key: '_id',
       load: () => sendRequest(),
-      insert: (values) =>
-        sendRequest('POST', {
-          values,
-        }),
-      update: (key, values) =>
-        sendRequest('PUT', {
-          key,
-          values,
-        }),
-      remove: (key) =>
-        sendRequest('DELETE', {
-          key,
-        }),
     }),
   );
 
@@ -46,38 +34,15 @@ function WorkList() {
       const { data } = await getTasks();
       return data;
     }
-    if (method === 'PUT') {
-      const { key, values } = data;
-      return updateTask(key, values);
-    }
-    if (method === 'POST') {
-      const { values } = data;
-      const { data: dataRturn } = await insertTask(values);
-      return dataRturn;
-    }
-    if (method === 'DELETE') {
-      const { key } = data;
-      return deleteTasks(key);
-    }
   }
 
-  const cellComponent = (data: any) => {
-    const uploadFile = () => {
-      showModal();
+  const details = (data: any) => {
+    const handleClickDetail = () => {
+      setIsModalDetailOpen(true);
+      setDataModal(data?.data?.data);
     };
     return (
-      <div className="cursor-pointer text-sky-400" onClick={uploadFile}>
-        Upload file
-      </div>
-    );
-  };
-
-  const details = (data: any) => {
-    return (
-      <div
-        className="cursor-pointer text-sky-400"
-        onClick={() => setIsModalDetailOpen(true)}
-      >
+      <div className="cursor-pointer text-sky-400" onClick={() => handleClickDetail()}>
         Chi tiết
       </div>
     );
@@ -93,7 +58,7 @@ function WorkList() {
       >
         <Scrolling mode="virtual" useNative={true} />
 
-        <Column dataField="title" caption="Tiêu đề" fixed={true} width={300}></Column>
+        <Column dataField="title" caption="Tiêu đề"></Column>
         <Column dataField="description" visible={false}>
           <FormItem
             colSpan={2}
@@ -127,12 +92,9 @@ function WorkList() {
           format="dd/MM/yyyy"
           width={150}
         ></Column>
-        {/* <Column dataField="isUpload" caption="Upload" dataType="boolean"></Column> */}
-        <Column caption="File" width={100} cellComponent={cellComponent} />
         <Column caption="Chi tiết" width={100} cellComponent={details} />
       </DataGrid>
-      <ModalUploadFileUpload />
-      <ModalDetails />
+      {dataModal && <ModalDetails dataModal={dataModal} />}
     </React.Fragment>
   );
 }

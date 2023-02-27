@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 import 'devextreme-react/text-area';
 
 import CustomStore from 'devextreme/data/custom_store';
@@ -17,10 +19,11 @@ import React, { useState } from 'react';
 
 import { deleteTasks, getTasks, insertTask, updateTask } from '../../api/Tasks/tasks.api';
 import { useTask } from '../../context/task.context';
+import ModalFilesReport from './components/ModalFilesReport';
 const notesEditorOptions = { height: 200 };
 
 function Task() {
-  const { users } = useTask();
+  const { users, setIsModalOpen } = useTask();
   const [ordersData] = useState(
     new CustomStore({
       key: '_id',
@@ -61,6 +64,17 @@ function Task() {
     }
   }
 
+  const files = (data: any) => {
+    const handleClickDetail = () => {
+      setIsModalOpen(true);
+    };
+    return (
+      <div className="cursor-pointer text-sky-400" onClick={() => handleClickDetail()}>
+        Files report
+      </div>
+    );
+  };
+
   return (
     <React.Fragment>
       <DataGrid
@@ -93,7 +107,7 @@ function Task() {
         <Scrolling mode="virtual" />
 
         <Column dataField="title" caption="Tiêu đề"></Column>
-        <Column dataField="description">
+        <Column dataField="description" visible={false}>
           <FormItem
             colSpan={2}
             editorType="dxTextArea"
@@ -126,8 +140,15 @@ function Task() {
           caption="Ngày tạo"
           format="dd/MM/yyyy"
         ></Column>
-        <Column dataField="isUpload" caption="Upload" dataType="boolean"></Column>
+        <Column
+          dataField="isUpload"
+          caption="Upload"
+          dataType="boolean"
+          width={100}
+        ></Column>
+        <Column caption="Chi tiết" width={100} cellComponent={files} />
       </DataGrid>
+      <ModalFilesReport />
     </React.Fragment>
   );
 }

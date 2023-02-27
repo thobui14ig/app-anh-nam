@@ -13,7 +13,7 @@ type Inputs = {
 };
 
 const ChatComponent = () => {
-  const { roomId, receiveId } = useChat();
+  const { roomId, receiveId, setRoomId } = useChat();
   const [messages, setMessages] = useState<MessageType[]>([]);
   const user = getUserLocal();
   const { socket: currentSocket } = useSelector((state: RootState) => state.socket);
@@ -40,10 +40,17 @@ const ChatComponent = () => {
     if (currentSocket) {
       currentSocket?.on(
         'sendDataServer',
-        (data: { receiveId: string; content: string }) => {
-          const { content, receiveId } = data;
-          console.log(22, data);
-          handleAppendMessage(receiveId, content);
+        (data: { receiveId: string; content: string; roomId: string }) => {
+          const { content, receiveId, roomId: roomIdRerturn } = data;
+
+          // setRoomId((roomId: string) => {
+          const rId = localStorage.getItem('roomId');
+          if (roomIdRerturn === rId) {
+            handleAppendMessage(receiveId, content);
+          }
+
+          //   return roomId;
+          // });
         },
       );
     }
@@ -67,6 +74,7 @@ const ChatComponent = () => {
         senderId: user._id,
         text: newMessage,
         receiveId,
+        roomId,
       });
       //append vao mang tin nhan
       handleAppendMessage(user._id, newMessage);

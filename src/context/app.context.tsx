@@ -20,6 +20,8 @@ interface ChatState {
   setScreen: any;
   listUsers: any;
   currentUser: any;
+  selectedUser: any;
+  setSelectedUser: any;
 }
 
 export const ChatContext = React.createContext<ChatState>({
@@ -38,6 +40,8 @@ export const ChatContext = React.createContext<ChatState>({
   setScreen: undefined,
   listUsers: undefined,
   currentUser: undefined,
+  selectedUser: undefined,
+  setSelectedUser: undefined,
 });
 
 export enum SCREEN_TYPE {
@@ -53,6 +57,7 @@ const ChatProvider = ({ children }: any) => {
   const [screen, setScreen] = useState(SCREEN_TYPE.USER);
   const { listUsers } = useSelector((state: RootState) => state.resource);
   const currentUser = getUserLocal();
+  const [selectedUser, setSelectedUser] = useState(null);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -82,6 +87,8 @@ const ChatProvider = ({ children }: any) => {
     setScreen,
     listUsers,
     currentUser,
+    selectedUser,
+    setSelectedUser,
   };
 
   return <ChatContext.Provider value={values}>{children}</ChatContext.Provider>;
