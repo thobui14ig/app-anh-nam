@@ -15,6 +15,7 @@ const getUserLocal = (): {
   name: string;
   createdAt: Date;
   updatedAt: Date;
+  role: string;
 } => {
   return JSON.parse(localStorage.getItem('userInfo') as string);
 };

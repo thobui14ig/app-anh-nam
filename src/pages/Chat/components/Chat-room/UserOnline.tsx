@@ -4,6 +4,7 @@ import { Tabs, TabsProps } from 'antd';
 import React from 'react';
 
 import { useChat } from '../../../../context/app.context';
+import { getUserLocal } from '../../../../helper';
 import ListMessageGroups from './ListMessageGroup';
 import ListMessageUser from './ListMessageUsers';
 import ModalCreateMessageUser from './ModalCreateMessageUser';
@@ -22,6 +23,7 @@ const items: TabsProps['items'] = [
 ];
 
 const ListMessage = () => {
+  const user = getUserLocal();
   const { showModal, setScreen } = useChat();
   const onChange = (key: string) => {
     setScreen(Number(key));
@@ -37,9 +39,16 @@ const ListMessage = () => {
           }}
         >
           <div className="text-gray-700 font-medium pb-2">Danh sách tin nhắn</div>
-          <button className="text-gray-700 font-medium pb-2" onClick={() => showModal()}>
-            +
-          </button>
+          {user.role === 'admin' ? (
+            <button
+              className="text-gray-700 font-medium pb-2"
+              onClick={() => showModal()}
+            >
+              +
+            </button>
+          ) : (
+            ''
+          )}
         </div>
         <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
       </div>
