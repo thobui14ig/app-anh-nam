@@ -1,11 +1,10 @@
 import TaskProvider from '../../context/task.context';
-import ReportHOC from './Report';
-import Report from './Report';
+import Task from './Task';
 
 const ReportLayout = () => {
   return (
     <TaskProvider>
-      <ReportHOC />
+      <Task />
     </TaskProvider>
   );
 };

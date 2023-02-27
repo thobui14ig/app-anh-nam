@@ -14,7 +14,7 @@ class Http {
       headers: {
         x_authorization: this.accessToken,
         Accept: 'application/json',
-        'Content-Type': 'application/json',
+        'Content-Type': 'multipart/form-data',
         Authorization: 'Bearer ' + this.accessToken,
       },
       data: {

@@ -15,8 +15,8 @@ import LeftMenu from './components/LeftMenu';
 import { getUserLocal, hasmapUser } from './helper';
 import Login from './pages/Auth/Login';
 import LayoutChat from './pages/Chat/Layout';
-import ReportLayout from './pages/Report';
-import TaskLayout from './pages/Task/TaskLayout';
+import ReportLayout from './pages/Task';
+import WorkListLayout from './pages/WorkList';
 import useSocket from './Socket/useSocket';
 import { setListUsers, setUsers } from './stores/resource-store';
 
@@ -33,11 +33,11 @@ function App() {
       element: <LayoutChat />,
     },
     {
-      path: '/task',
-      element: <TaskLayout />,
+      path: '/work-list',
+      element: <WorkListLayout />,
     },
     {
-      path: '/report',
+      path: '/task',
       element: <ReportLayout />,
     },
     // },
