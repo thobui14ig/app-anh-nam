@@ -10,6 +10,8 @@ interface WorkListState {
   showModal: any;
   handleOk: any;
   handleCancel: any;
+  isModalDetailOpen: any;
+  setIsModalDetailOpen: any;
 }
 
 export const WorkListContext = React.createContext<WorkListState>({
@@ -19,11 +21,14 @@ export const WorkListContext = React.createContext<WorkListState>({
   showModal: undefined,
   handleOk: undefined,
   handleCancel: undefined,
+  isModalDetailOpen: undefined,
+  setIsModalDetailOpen: undefined,
 });
 
 const WorkListProvider = ({ children }: any) => {
   const { users } = useSelector((state: RootState) => state.resource);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalDetailOpen, setIsModalDetailOpen] = useState(false);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -44,6 +49,8 @@ const WorkListProvider = ({ children }: any) => {
     showModal,
     handleOk,
     handleCancel,
+    isModalDetailOpen,
+    setIsModalDetailOpen,
   };
 
   return <WorkListContext.Provider value={values}>{children}</WorkListContext.Provider>;
