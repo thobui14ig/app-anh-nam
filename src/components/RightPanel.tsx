@@ -8,27 +8,27 @@ const RightPanel = ({ handleCloseRightPanel }: any) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
-  const handleTitleChange = (event) => {
+  const handleTitleChange = (event: any) => {
     setTitle(event.target.value);
   };
 
-  const handleDescriptionChange = (event) => {
+  const handleDescriptionChange = (event: any) => {
     setDescription(event.target.value);
   };
 
-  const handleFormSubmit = (event) => {
+  const handleFormSubmit = (event: any) => {
     event.preventDefault();
   };
 
-  function handleSearch(value) {
+  function handleSearch(value: any) {
     console.log(`search ${value}`);
   }
 
-  function handleChange(value) {
+  function handleChange(value: any) {
     console.log(`selected ${value}`);
   }
 
-  function handleDateChange(date) {
+  function handleDateChange(date: any) {
     console.log(111, date);
   }
 

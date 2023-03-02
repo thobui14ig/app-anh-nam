@@ -19,6 +19,7 @@ import ModalDetails from './components/ModalDetail';
 const notesEditorOptions = { height: 200 };
 
 function WorkList() {
+  let stt = 1;
   const { users, setIsModalDetailOpen } = useWorkList();
   const [dataModal, setDataModal] = useState<TASKLIST | null>(null);
 
@@ -29,7 +30,7 @@ function WorkList() {
     }),
   );
 
-  async function sendRequest(method = 'GET', data = {}) {
+  async function sendRequest(method = 'GET') {
     if (method === 'GET') {
       const { data } = await getTasks();
       return data;
@@ -57,6 +58,14 @@ function WorkList() {
         repaintChangesOnly={true}
       >
         <Scrolling mode="virtual" useNative={true} />
+        <Column
+          caption="STT"
+          width={50}
+          alignment="center"
+          customizeText={() => {
+            return String(stt++);
+          }}
+        />
 
         <Column dataField="title" caption="Tiêu đề"></Column>
         <Column dataField="description" visible={false}>

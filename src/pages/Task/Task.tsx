@@ -19,11 +19,14 @@ import React, { useState } from 'react';
 
 import { deleteTasks, getTasks, insertTask, updateTask } from '../../api/Tasks/tasks.api';
 import { useTask } from '../../context/task.context';
+import TASKLIST from '../../type/task.type';
 import ModalFilesReport from './components/ModalFilesReport';
 const notesEditorOptions = { height: 200 };
 
 function Task() {
+  let stt = 1;
   const { users, setIsModalOpen } = useTask();
+  const [modalId, setModalId] = useState<string | null>(null);
   const [ordersData] = useState(
     new CustomStore({
       key: '_id',
@@ -44,7 +47,7 @@ function Task() {
     }),
   );
 
-  async function sendRequest(method = 'GET', data = {}) {
+  async function sendRequest(method = 'GET', data: any = {}) {
     if (method === 'GET') {
       const { data } = await getTasks();
       return data;
@@ -54,9 +57,11 @@ function Task() {
       return updateTask(key, values);
     }
     if (method === 'POST') {
+      alert();
       const { values } = data;
-      const { data: dataRturn } = await insertTask(values);
-      return dataRturn;
+      console.log(values);
+      // const { data: dataRturn } = await insertTask(values);
+      // return dataRturn;
     }
     if (method === 'DELETE') {
       const { key } = data;
@@ -66,6 +71,7 @@ function Task() {
 
   const files = (data: any) => {
     const handleClickDetail = () => {
+      setModalId(data?.data?.data?._id);
       setIsModalOpen(true);
     };
     return (
@@ -105,6 +111,14 @@ function Task() {
         </Editing>
 
         <Scrolling mode="virtual" />
+        <Column
+          caption="STT"
+          width={50}
+          alignment="center"
+          customizeText={() => {
+            return String(stt++);
+          }}
+        />
 
         <Column dataField="title" caption="Tiêu đề"></Column>
         <Column dataField="description" visible={false}>
@@ -148,7 +162,7 @@ function Task() {
         ></Column>
         <Column caption="Chi tiết" width={100} cellComponent={files} />
       </DataGrid>
-      <ModalFilesReport />
+      {modalId && <ModalFilesReport modalId={modalId} />}
     </React.Fragment>
   );
 }
