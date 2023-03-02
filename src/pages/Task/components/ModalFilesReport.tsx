@@ -1,12 +1,11 @@
-import { UploadOutlined } from '@ant-design/icons';
-import type { UploadProps } from 'antd';
-import { Button, Modal, Upload } from 'antd';
+import { Modal, Upload } from 'antd';
 import type { UploadFile } from 'antd/es/upload/interface';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
+import { getFiles } from '../../../api/Tasks/tasks.api';
 import { useTask } from '../../../context/task.context';
 
-const ModalFilesReport: React.FC = () => {
+const ModalFilesReport = ({ modalId }: { modalId: string }) => {
   const { setIsModalOpen, isModalOpen } = useTask();
   const [fileList, setFileList] = useState<UploadFile[]>([
     {
@@ -17,6 +16,22 @@ const ModalFilesReport: React.FC = () => {
     },
   ]);
 
+  useEffect(() => {
+    const fetch = async () => {
+      const { data: listFiles } = await getFiles(modalId);
+      const newData = listFiles.attachments.map((item: any) => {
+        return {
+          ...item,
+          status: 'done',
+          url: `http://localhost:9000/api/tasks/attachment/${item.name}`,
+        };
+      });
+      setFileList(newData);
+    };
+
+    fetch();
+  }, [modalId]);
+
   return (
     <>
       <Modal
@@ -25,7 +40,7 @@ const ModalFilesReport: React.FC = () => {
         onOk={() => setIsModalOpen(false)}
         onCancel={() => setIsModalOpen(false)}
       >
-        file1
+        <Upload fileList={fileList}></Upload>
       </Modal>
     </>
   );

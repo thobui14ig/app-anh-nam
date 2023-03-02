@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { io, Socket } from 'socket.io-client';
 
+import ApiConstant from '../api/apiConstant';
 import { getToken } from '../helper';
 import { handleSetSocket } from '../stores/socket';
 import { RootState } from '../stores/store';
@@ -13,7 +14,7 @@ const useSocket = () => {
   useEffect(() => {
     const token = getToken();
 
-    const socket = io('ws://localhost:9000', {
+    const socket = io(`ws://${ApiConstant.IP}:9000`, {
       query: { token },
     }) as Socket;
     dispatch(handleSetSocket(socket));

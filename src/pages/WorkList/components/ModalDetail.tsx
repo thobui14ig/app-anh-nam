@@ -4,6 +4,8 @@ import { Button, Modal, Upload } from 'antd';
 import type { UploadFile } from 'antd/es/upload/interface';
 import React, { useEffect, useState } from 'react';
 
+import ApiConstant from '../../../api/apiConstant';
+import { getFiles } from '../../../api/Tasks/tasks.api';
 import { useWorkList } from '../../../context/work-list.context';
 import TASKLIST from '../../../type/task.type';
 interface DATAMODAL {
@@ -11,22 +13,15 @@ interface DATAMODAL {
 }
 
 const ModalDetails = ({ dataModal }: DATAMODAL) => {
-  const { isModalDetailOpen, setIsModalDetailOpen } = useWorkList();
-  const [fileList, setFileList] = useState<UploadFile[]>([
-    {
-      uid: '-1',
-      name: 'xxx.png',
-      status: 'done',
-      url: 'http://www.baidu.com/xxx.png',
-    },
-  ]);
+  const { isModalDetailOpen, setIsModalDetailOpen, user } = useWorkList();
+  const [fileList, setFileList] = useState<UploadFile[]>();
 
   const handleChange: UploadProps['onChange'] = (info) => {
     let newFileList = [...info.fileList];
 
     // 1. Limit the number of uploaded files
     // Only to show two recent uploaded files, and old ones will be replaced by the new
-    newFileList = newFileList.slice(-2);
+    // newFileList = newFileList.slice(-2);
 
     // 2. Read from response and show file link
     newFileList = newFileList.map((file) => {
@@ -41,7 +36,7 @@ const ModalDetails = ({ dataModal }: DATAMODAL) => {
   };
 
   const props = {
-    action: 'http://localhost:9000/tasks/upload-report',
+    action: `${ApiConstant.BASE_API_URL}/tasks/upload-report/${dataModal._id}/${user?._id}`,
     onChange: handleChange,
     multiple: true,
   };
@@ -55,11 +50,20 @@ const ModalDetails = ({ dataModal }: DATAMODAL) => {
       {
         uid: '-1',
         name: 'xxx.png',
-        status: 'done',
-        url: 'http://www.baidu.com/xxx.png',
+        // status: 'done',
+        // url: 'http://www.baidu.com/xxx.png',
       },
     ]);
   }, []);
+
+  useEffect(() => {
+    const fetch = async () => {
+      const { data: listFiles } = await getFiles(dataModal._id);
+      setFileList(listFiles.attachments);
+    };
+
+    fetch();
+  }, [isModalDetailOpen]);
 
   return (
     <Modal

@@ -1,6 +1,7 @@
 import '../login.scss';
 
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 
 import ApiConstant from '../../../api/apiConstant';
@@ -9,6 +10,7 @@ import { login } from '../../../api/Auth/auth.api';
 const useLogin = () => {
   const [username, setUsername] = useState('thobui1');
   const [password, setPassword] = useState('111111');
+  const navigate = useNavigate();
 
   const handleGetUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
@@ -26,6 +28,7 @@ const useLogin = () => {
       // localStorage.setItem('refreshToken', result?.data.refreshToken);
       localStorage.setItem('userInfo', JSON.stringify(result?.data?.user));
       window.location.href = ApiConstant.BASE_CLIENT_URL;
+      // navigate(`/login`);
     } catch (err: any) {
       toast(err?.response?.data);
     }

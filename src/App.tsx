@@ -9,25 +9,25 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useRoutes } from 'react-router';
 
-import ApiConstant from './api/apiConstant';
 import { getUsers } from './api/Users/user.api';
+import Header from './components/Header/Header';
 import LeftMenu from './components/LeftMenu';
-import { getUserLocal, hasmapUser } from './helper';
+import { hasmapUser } from './helper';
 import Login from './pages/Auth/Login';
 import LayoutChat from './pages/Chat/Layout';
 import ReportLayout from './pages/Task';
-import TaskLayout from './pages/Taskxx/TaskLayout';
+import Users from './pages/Users';
 import WorkListLayout from './pages/WorkList';
 import useSocket from './Socket/useSocket';
 import { setListUsers, setUsers } from './stores/resource-store';
 
 function App() {
   const dispatch = useDispatch();
-  const currentUser = getUserLocal();
+
   const elements = useRoutes([
     {
-      path: '/',
-      element: <h1>Trang chủ</h1>,
+      path: '/users',
+      element: <Users />,
     },
     {
       path: '/message',
@@ -41,14 +41,7 @@ function App() {
       path: '/task',
       element: <ReportLayout />,
     },
-
-    // },
   ]);
-
-  const logout = () => {
-    localStorage.clear();
-    window.location.href = ApiConstant.BASE_CLIENT_URL + '/login';
-  };
 
   useSocket();
 
@@ -68,16 +61,7 @@ function App() {
 
   return (
     <div className="flex flex-col h-screen w-screen">
-      <div className="flex flex-row items-center justify-between h-16 px-4 bg-gray-800 text-white fixed top-0 left-0 right-0 z-10">
-        <div>WEBSITE</div>
-        <div className="flex-grow"></div>
-        <div className="cursor-pointer mr-4">
-          <span>{currentUser?.name}</span>
-        </div>
-        <div className="cursor-pointer">
-          <span onClick={() => logout()}>Đăng xuất</span>
-        </div>
-      </div>
+      <Header />
       <div className="flex flex-row h-screen w-screen pt-16">
         <LeftMenu />
         <div className="flex flex-row w-screen p-2">{elements}</div>

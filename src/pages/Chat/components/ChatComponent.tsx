@@ -45,6 +45,9 @@ const ChatComponent = () => {
 
           // setRoomId((roomId: string) => {
           const rId = localStorage.getItem('roomId');
+          console.log('room return:', roomIdRerturn);
+          console.log('room local:', rId);
+
           if (roomIdRerturn === rId) {
             handleAppendMessage(receiveId, content);
           }
