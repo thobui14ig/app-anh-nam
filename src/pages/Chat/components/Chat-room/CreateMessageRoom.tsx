@@ -1,12 +1,19 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import { Select } from 'antd';
 import { DefaultOptionType } from 'antd/es/select';
-import { Label } from 'devextreme-react/bar-gauge';
-import React, { useState } from 'react';
 
 import { useChat } from '../../../../context/app.context';
 const { Option } = Select;
+
 export default function CreateMessageRoom() {
-  const { listUsers, currentUser, listUsersGroup, setListUserGroup } = useChat();
+  const {
+    listUsers,
+    currentUser,
+    listUsersGroup,
+    setListUserGroup,
+    groupName,
+    setGroupName,
+  } = useChat();
 
   const renderUsers = () => {
     return (
@@ -44,7 +51,14 @@ export default function CreateMessageRoom() {
 
   return (
     <>
-      <Label>Chọn thành viên:</Label>
+      <label>Tên nhóm:</label>
+      <input
+        onChange={(e) => setGroupName(e.target.value)}
+        value={groupName}
+        type="text"
+        className="w-full border border-gray-300 py-2 px-2 rounded-md"
+      />
+      <label>Chọn thành viên:</label>
       <Select
         showSearch
         placeholder={'Add user'}

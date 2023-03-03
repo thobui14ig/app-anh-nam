@@ -11,12 +11,14 @@ const ListMessageUsers = () => {
   const { handleGetCurrentChat } = useUserOnline();
   const [listChats, setListChats] = useState([]);
   const [flag, setFlag] = useState(true);
-  console.log(3333, listChats);
+
   const list = useMemo(() => {
     return listChats.map((item: any) => {
       return item.users.find((user: any) => user !== currentUser._id);
     });
   }, [listChats]);
+
+  console.log(3333, list);
 
   const handleOnclick = (userId: any) => {
     handleGetCurrentChat(userId);

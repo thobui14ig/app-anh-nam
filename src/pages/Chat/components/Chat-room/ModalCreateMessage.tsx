@@ -13,15 +13,23 @@ const ModalCreateMessageUser: React.FC = () => {
     isModalOpen,
     isRenderListMessage,
     setIsRenderListMessage,
+    setScreen,
+    screen,
+    listUsersGroup,
+    groupName,
   } = useChat();
   const { handleGetCurrentChat } = useUserOnline();
   const [userId, setUserId] = useState<string | null>(null);
   const title = 'Tạo tin nhắn mới';
 
   const handleCreateChat = async () => {
-    await handleGetCurrentChat(userId as string);
-    setIsRenderListMessage(!isRenderListMessage);
-    handleOk();
+    if (screen === 1) {
+      await handleGetCurrentChat(userId as string);
+      setIsRenderListMessage(!isRenderListMessage);
+      handleOk();
+    } else {
+      console.log('tạo group', listUsersGroup, groupName);
+    }
   };
 
   const items: TabsProps['items'] = [
@@ -37,6 +45,10 @@ const ModalCreateMessageUser: React.FC = () => {
     },
   ];
 
+  const onChange = (key: string) => {
+    setScreen(Number(key));
+  };
+
   return (
     <>
       <Modal
@@ -45,7 +57,7 @@ const ModalCreateMessageUser: React.FC = () => {
         onOk={handleCreateChat}
         onCancel={handleCancel}
       >
-        <Tabs defaultActiveKey="1" items={items} />
+        <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
       </Modal>
     </>
   );
