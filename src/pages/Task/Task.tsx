@@ -57,11 +57,9 @@ function Task() {
       return updateTask(key, values);
     }
     if (method === 'POST') {
-      alert();
       const { values } = data;
-      console.log(values);
-      // const { data: dataRturn } = await insertTask(values);
-      // return dataRturn;
+      const { data: dataRturn } = await insertTask(values);
+      return dataRturn;
     }
     if (method === 'DELETE') {
       const { key } = data;

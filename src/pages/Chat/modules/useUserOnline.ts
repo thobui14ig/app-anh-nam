@@ -14,6 +14,7 @@ const useUserOnline = () => {
     setMessages(data?.messages);
     setReceive(receiveId);
   };
+
   return { handleGetCurrentChat };
 };
 

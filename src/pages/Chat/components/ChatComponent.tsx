@@ -13,17 +13,11 @@ type Inputs = {
 };
 
 const ChatComponent = () => {
-  const { roomId, receiveId, setRoomId } = useChat();
+  const { roomId, receiveId } = useChat();
   const [messages, setMessages] = useState<MessageType[]>([]);
   const user = getUserLocal();
   const { socket: currentSocket } = useSelector((state: RootState) => state.socket);
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-    reset,
-  } = useForm<Inputs>();
+  const { register, handleSubmit, reset } = useForm<Inputs>();
 
   useEffect(() => {
     if (roomId) {
@@ -42,24 +36,15 @@ const ChatComponent = () => {
         'sendDataServer',
         (data: { receiveId: string; content: string; roomId: string }) => {
           const { content, receiveId, roomId: roomIdRerturn } = data;
-
-          // setRoomId((roomId: string) => {
           const rId = localStorage.getItem('roomId');
-          console.log('room return:', roomIdRerturn);
-          console.log('room local:', rId);
 
           if (roomIdRerturn === rId) {
             handleAppendMessage(receiveId, content);
           }
-
-          //   return roomId;
-          // });
         },
       );
     }
   }, [currentSocket]);
-
-  // const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const { newMessage } = data;
@@ -139,13 +124,6 @@ const ChatComponent = () => {
             className="bg-blue-500 text-white py-3 px-6 rounded ml-2"
           />
         </form>
-
-        {/* <button
-          className="bg-blue-500 text-white py-3 px-6 rounded ml-2"
-          onClick={(e) => handleMessageSubmit(e)}
-        >
-          Send
-        </button> */}
       </div>
     </div>
   );

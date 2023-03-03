@@ -2,6 +2,7 @@ import { Modal, Upload } from 'antd';
 import type { UploadFile } from 'antd/es/upload/interface';
 import { useEffect, useState } from 'react';
 
+import ApiConstant from '../../../api/apiConstant';
 import { getFiles } from '../../../api/Tasks/tasks.api';
 import { useTask } from '../../../context/task.context';
 
@@ -23,7 +24,7 @@ const ModalFilesReport = ({ modalId }: { modalId: string }) => {
         return {
           ...item,
           status: 'done',
-          url: `http://localhost:9000/api/tasks/attachment/${item.name}`,
+          url: `${ApiConstant.BASE_API_URL}/tasks/attachment/${item.name}`,
         };
       });
       setFileList(newData);

@@ -22,6 +22,10 @@ interface ChatState {
   currentUser: any;
   selectedUser: any;
   setSelectedUser: any;
+  setIsRenderListMessage: any;
+  isRenderListMessage: any;
+  listUsersGroup: any;
+  setListUserGroup: any;
 }
 
 export const ChatContext = React.createContext<ChatState>({
@@ -42,6 +46,10 @@ export const ChatContext = React.createContext<ChatState>({
   currentUser: undefined,
   selectedUser: undefined,
   setSelectedUser: undefined,
+  setIsRenderListMessage: undefined,
+  isRenderListMessage: undefined,
+  listUsersGroup: undefined,
+  setListUserGroup: undefined,
 });
 
 export enum SCREEN_TYPE {
@@ -58,6 +66,8 @@ const ChatProvider = ({ children }: any) => {
   const { listUsers } = useSelector((state: RootState) => state.resource);
   const currentUser = getUserLocal();
   const [selectedUser, setSelectedUser] = useState(null);
+  const [isRenderListMessage, setIsRenderListMessage] = useState(false);
+  const [listUsersGroup, setListUserGroup] = useState<string[]>([]);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -89,6 +99,10 @@ const ChatProvider = ({ children }: any) => {
     currentUser,
     selectedUser,
     setSelectedUser,
+    isRenderListMessage,
+    setIsRenderListMessage,
+    listUsersGroup,
+    setListUserGroup,
   };
 
   return <ChatContext.Provider value={values}>{children}</ChatContext.Provider>;

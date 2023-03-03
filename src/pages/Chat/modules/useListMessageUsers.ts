@@ -4,7 +4,7 @@ import { getListChatUser } from '../../../api/Chat/chat';
 import { useChat } from '../../../context/app.context';
 export const useListMessageUser = () => {
   const [listChats, setListChats] = useState([]);
-  const { currentUser } = useChat();
+  const { currentUser, isRenderListMessage } = useChat();
 
   useEffect(() => {
     const fetch = async () => {
@@ -12,6 +12,7 @@ export const useListMessageUser = () => {
       setListChats(data.data.listChats);
     };
     fetch();
-  }, []);
+  }, [isRenderListMessage]);
+
   return { listChats };
 };
