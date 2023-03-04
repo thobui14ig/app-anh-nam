@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+import { Avatar } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
 
 import { getListChatUser } from '../../../../api/Chat/chat';
@@ -14,11 +15,21 @@ const ListMessageUsers = () => {
 
   const list = useMemo(() => {
     return listChats.map((item: any) => {
-      return item.users.find((user: any) => user !== currentUser._id);
+      if (item?.type === 'user') {
+        const data = item.users.find((user: any) => user !== currentUser._id);
+        return {
+          id: item._id,
+          name: data,
+          type: item.type,
+        };
+      }
+      return {
+        id: item._id,
+        name: item.name,
+        type: item.type,
+      };
     });
   }, [listChats]);
-
-  console.log(3333, list);
 
   const handleOnclick = (userId: any) => {
     handleGetCurrentChat(userId);
@@ -35,7 +46,7 @@ const ListMessageUsers = () => {
   useEffect(() => {
     if (list.length > 0 && flag) {
       // selected tin nhắn đầu tiên
-      handleGetCurrentChat(list[0]);
+      handleGetCurrentChat(list[0].id);
       setFlag(false);
     }
   }, [listChats]);
@@ -44,18 +55,28 @@ const ListMessageUsers = () => {
     <ul className="mt-6">
       {list &&
         listUsers &&
-        list.map((userId, index) => {
+        list.map((item, index) => {
           return (
             <li
               key={index}
               className={
-                selectedUser === userId
-                  ? 'text-gray-600 mb-2 p-2 rounded-md cursor-pointer bg-sky-400'
-                  : 'text-gray-600 mb-2 hover:bg-sky-200 p-2 rounded-md cursor-pointer '
+                selectedUser === item.id
+                  ? 'text-gray-600 mb-2 p-3 pl-1 rounded-md cursor-pointer bg-sky-400'
+                  : 'text-gray-600 mb-2 hover:bg-sky-200 p-3 pl-1 rounded-md cursor-pointer '
               }
-              onClick={() => handleOnclick(userId)}
+              onClick={() => handleOnclick(item.id)}
+              style={{ justifyContent: 'center', alignItems: 'center' }}
             >
-              <span>{listUsers[userId]}</span>
+              <Avatar
+                size={50}
+                src={'https://robohash.org/user123.png?size=64x64&set=set4'}
+              />
+
+              {item.type === 'group' ? (
+                <span className="pl-2">{item.name}</span>
+              ) : (
+                <span className="pl-2">{listUsers[item.name]}</span>
+              )}
             </li>
           );
         })}

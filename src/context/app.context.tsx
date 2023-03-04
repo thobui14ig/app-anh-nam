@@ -9,7 +9,7 @@ interface ChatState {
   setMessages: any;
   roomId: string | null;
   setRoomId: any;
-  receiveId: string | null;
+  receiveIds: string | null;
   setReceive: any;
   isModalOpen: any;
   setIsModalOpen: any;
@@ -28,6 +28,8 @@ interface ChatState {
   setListUserGroup: any;
   groupName: any;
   setGroupName: any;
+  title: any;
+  setTitle: any;
 }
 
 export const ChatContext = React.createContext<ChatState>({
@@ -35,7 +37,7 @@ export const ChatContext = React.createContext<ChatState>({
   setMessages: undefined,
   roomId: '',
   setRoomId: undefined,
-  receiveId: null,
+  receiveIds: null,
   setReceive: undefined,
   isModalOpen: undefined,
   setIsModalOpen: undefined,
@@ -54,6 +56,8 @@ export const ChatContext = React.createContext<ChatState>({
   setListUserGroup: undefined,
   groupName: undefined,
   setGroupName: undefined,
+  title: undefined,
+  setTitle: undefined,
 });
 
 export enum SCREEN_TYPE {
@@ -64,7 +68,7 @@ export enum SCREEN_TYPE {
 const ChatProvider = ({ children }: any) => {
   const [messages, setMessages] = useState([]);
   const [roomId, setRoomId] = useState(null);
-  const [receiveId, setReceive] = useState('');
+  const [receiveIds, setReceive] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [screen, setScreen] = useState(SCREEN_TYPE.USER);
   const { listUsers } = useSelector((state: RootState) => state.resource);
@@ -73,6 +77,7 @@ const ChatProvider = ({ children }: any) => {
   const [isRenderListMessage, setIsRenderListMessage] = useState(false);
   const [listUsersGroup, setListUserGroup] = useState<string[]>([]);
   const [groupName, setGroupName] = useState<string>('');
+  const [title, setTitle] = useState<string>('');
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -91,7 +96,7 @@ const ChatProvider = ({ children }: any) => {
     setMessages,
     roomId,
     setRoomId,
-    receiveId,
+    receiveIds,
     setReceive,
     isModalOpen,
     setIsModalOpen,
@@ -110,6 +115,8 @@ const ChatProvider = ({ children }: any) => {
     setListUserGroup,
     groupName,
     setGroupName,
+    title,
+    setTitle,
   };
 
   return <ChatContext.Provider value={values}>{children}</ChatContext.Provider>;

@@ -7,3 +7,5 @@ export const insertUser = (values: any) => http.post(`/users`, values);
 export const updateUser = (key: string, values: any) =>
   http.patch(`/users/${key}`, values);
 export const deleteUser = (key: string) => http.delete<any>(`/users/${key}`);
+
+export const getUser = (id: string) => http.get<USER_TYPE>(`/users/${id}`);
