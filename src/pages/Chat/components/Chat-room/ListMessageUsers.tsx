@@ -2,29 +2,41 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import { useEffect, useMemo, useState } from 'react';
 
+import { getListChatUser } from '../../../../api/Chat/chat';
 import { useChat } from '../../../../context/app.context';
-import { useListMessageUser } from '../../modules/useListMessageUsers';
 import useUserOnline from '../../modules/useUserOnline';
 
 const ListMessageUsers = () => {
-  const { listUsers, currentUser, selectedUser } = useChat();
+  const { listUsers, currentUser, selectedUser, isRenderListMessage } = useChat();
   const { handleGetCurrentChat } = useUserOnline();
-  const { listChats } = useListMessageUser();
-  const [selected, setSelected] = useState();
+  const [listChats, setListChats] = useState([]);
+  const [flag, setFlag] = useState(true);
+
   const list = useMemo(() => {
     return listChats.map((item: any) => {
       return item.users.find((user: any) => user !== currentUser._id);
     });
   }, [listChats]);
 
+  console.log(3333, list);
+
   const handleOnclick = (userId: any) => {
-    // alert(chat._id);
     handleGetCurrentChat(userId);
   };
 
   useEffect(() => {
-    if (list.length > 0) {
+    const fetch = async () => {
+      const data = await getListChatUser(currentUser?._id);
+      setListChats(data.data.listChats);
+    };
+    fetch();
+  }, [isRenderListMessage]);
+
+  useEffect(() => {
+    if (list.length > 0 && flag) {
+      // selected tin nhắn đầu tiên
       handleGetCurrentChat(list[0]);
+      setFlag(false);
     }
   }, [listChats]);
 
