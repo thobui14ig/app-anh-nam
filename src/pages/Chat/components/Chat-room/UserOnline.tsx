@@ -11,7 +11,7 @@ const ListMessage = () => {
   const { showModal } = useChat();
   return (
     <>
-      <div className="bg-gray-200 w-1/4 p-4">
+      <div className="bg-gray-200 w-1/4 p-1 overflow-y-scroll">
         <div
           style={{
             display: 'flex',
@@ -19,7 +19,7 @@ const ListMessage = () => {
             alignItems: 'center',
           }}
         >
-          <div className="text-gray-700 font-medium pb-2">Danh sách tin nhắn</div>
+          <div className="text-gray-700 font-medium pb-2 text-xl">Messages</div>
           {Number(user.role) === Roles.ADMIN ? (
             <button
               className="text-gray-700 font-medium pb-2"

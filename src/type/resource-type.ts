@@ -16,6 +16,7 @@ export interface CREATEBY extends CREATEUPDATE {
   _id: string;
   email: string;
   name: string;
+  role: number;
 }
 
 export interface PROJECT extends CREATEUPDATE {
