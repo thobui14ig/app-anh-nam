@@ -5,8 +5,8 @@ import { toast } from 'react-toastify';
 import { createGroupChat } from '../../../../api/Chat/chat';
 import { useChat } from '../../../../context/app.context';
 import useUserOnline from '../../modules/useUserOnline';
-import CreateMessageRoom from './CreateMessageRoom';
-import CreateMessageUser from './CreateMessageUser';
+import CreateMessageRoom from '../Chat-room/CreateMessageRoom';
+import CreateMessageUser from '../Chat-room/CreateMessageUser';
 
 const ModalCreateMessageUser: React.FC = () => {
   const {

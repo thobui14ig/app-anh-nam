@@ -41,3 +41,6 @@ export const createGroupChat = (values: any) =>
 
 export const removeMessage = (id: string, roomId: string) =>
   http.delete<any>(`/chat-room/remove-message/${id}/${roomId}`);
+
+export const getUsersInRoom = (roomId: string) =>
+  http.get<any>(`/chat-room/get-users/${roomId}`);
