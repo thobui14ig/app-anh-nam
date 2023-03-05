@@ -20,3 +20,5 @@ export const deleteTasks = (key: string) => http.delete<any>(`/tasks/${key}`);
 export const uploadReport = (values: any) => http.post(`/tasks/upload-report`, values);
 export const getFiles = (taskId: string) =>
   http.get<any>(`/tasks/get-attachments/${taskId}`);
+export const deleteFile = (fileId: string, taskId: string) =>
+  http.delete<any>(`/tasks/remove-file/${fileId}/${taskId}`);

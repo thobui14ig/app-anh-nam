@@ -24,7 +24,7 @@ const ModalFilesReport = ({ modalId }: { modalId: string }) => {
         return {
           ...item,
           status: 'done',
-          url: `${ApiConstant.BASE_API_URL}/tasks/attachment/${item.name}`,
+          url: `${ApiConstant.BASE_API_URL}/tasks/attachment/${item?.path}`,
         };
       });
       setFileList(newData);

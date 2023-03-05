@@ -1,3 +1,5 @@
+import { Roles } from '../type/role.enum';
+
 const hasmapUser = (users: any) => {
   return users.reduce(function (map: any, obj: any) {
     map[obj._id] = obj?.name;
@@ -30,4 +32,13 @@ function randomColor() {
   return color;
 }
 
-export { getToken, getUserLocal, hasmapUser, randomColor };
+const isAdmin = () => {
+  const user = getUserLocal();
+  return Number(user.role) === Roles.ADMIN;
+};
+const isUser = () => {
+  const user = getUserLocal();
+  return Number(user.role) === Roles.USER;
+};
+
+export { getToken, getUserLocal, hasmapUser, isAdmin, isUser, randomColor };

@@ -3,6 +3,7 @@ import { Select } from 'antd';
 import { DefaultOptionType } from 'antd/es/select';
 
 import { useChat } from '../../../../context/app.context';
+import { isAdmin } from '../../../../helper';
 const { Option } = Select;
 
 export default function CreateMessageRoom() {
@@ -14,6 +15,9 @@ export default function CreateMessageRoom() {
     groupName,
     setGroupName,
   } = useChat();
+  const admin = isAdmin();
+
+  console.log(222, admin);
 
   const renderUsers = () => {
     return (
@@ -57,6 +61,7 @@ export default function CreateMessageRoom() {
         value={groupName}
         type="text"
         className="w-full border border-gray-300 py-2 px-2 rounded-md"
+        disabled={!admin ?? true}
       />
       <label>Chọn thành viên:</label>
       <Select
@@ -65,6 +70,7 @@ export default function CreateMessageRoom() {
         optionFilterProp="children"
         onChange={handleChange}
         defaultValue=""
+        disabled={!admin ?? true}
         filterOption={(input, option) =>
           (option?.children as unknown as DefaultOptionType)
             .toLowerCase()
@@ -85,6 +91,7 @@ export default function CreateMessageRoom() {
               <button
                 onClick={() => handleRemoveUserGroup(item)}
                 className="w-9 absolute top-0 h-8 right-0 px-2 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 focus:bg-red-600 text-xs"
+                disabled={!admin ?? true}
               >
                 X
               </button>
