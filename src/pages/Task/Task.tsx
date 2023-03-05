@@ -15,11 +15,17 @@ import {
   Scrolling,
 } from 'devextreme-react/data-grid';
 import { GroupItem, SimpleItem } from 'devextreme-react/form';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { deleteTasks, getTasks, insertTask, updateTask } from '../../api/Tasks/tasks.api';
+import ApiConstant from '../../api/apiConstant';
+import {
+  deleteTasks,
+  getFiles,
+  getTasks,
+  insertTask,
+  updateTask,
+} from '../../api/Tasks/tasks.api';
 import { useTask } from '../../context/task.context';
-import TASKLIST from '../../type/task.type';
 import ModalFilesReport from './components/ModalFilesReport';
 const notesEditorOptions = { height: 200 };
 
@@ -73,8 +79,27 @@ function Task() {
       setIsModalOpen(true);
     };
     return (
-      <div className="cursor-pointer text-sky-400" onClick={() => handleClickDetail()}>
+      <div
+        className="curasync sor-pointer text-sky-400 cursor-pointer"
+        onClick={() => handleClickDetail()}
+      >
         Files report
+      </div>
+    );
+  };
+
+  const customIsUpload = (value: any) => {
+    return (
+      <div style={{ backgroundColor: value ? '#4CAF50' : '#f44336' }}>
+        {value.data.isUpload ? 'Đã report' : 'No'}
+      </div>
+    );
+  };
+
+  const customIsSuccess = (value: any) => {
+    return (
+      <div style={{ backgroundColor: value ? '#4CAF50' : '#f44336' }}>
+        {value.data.success ? 'Đã xong' : 'No'}
       </div>
     );
   };
@@ -104,6 +129,7 @@ function Task() {
               <SimpleItem dataField="startDay" />
               <SimpleItem dataField="endDay" />
               <SimpleItem dataField="assigne" />
+              <SimpleItem dataField="success" />
             </GroupItem>
           </Form>
         </Editing>
@@ -156,9 +182,17 @@ function Task() {
           dataField="isUpload"
           caption="Upload"
           dataType="boolean"
+          cellRender={customIsUpload}
           width={100}
         ></Column>
-        <Column caption="Chi tiết" width={100} cellComponent={files} />
+        <Column caption="Reports" width={100} cellComponent={files} />
+        <Column
+          caption="Hoàn thành"
+          dataType="boolean"
+          dataField="success"
+          width={125}
+          cellRender={customIsSuccess}
+        />
       </DataGrid>
       {modalId && <ModalFilesReport modalId={modalId} />}
     </React.Fragment>

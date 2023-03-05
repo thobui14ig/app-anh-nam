@@ -1,9 +1,6 @@
-import { useSelector } from 'react-redux';
-
 import { getCurrentChat, getRoom } from '../../../api/Chat/chat';
 import { useChat } from '../../../context/app.context';
 import { getUserLocal } from '../../../helper';
-import { RootState } from '../../../stores/store';
 import { getUser } from './../../../api/Users/user.api';
 
 const useUserOnline = () => {

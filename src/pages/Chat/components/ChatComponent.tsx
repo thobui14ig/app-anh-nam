@@ -1,4 +1,7 @@
-import { DeleteOutlined } from '@ant-design/icons';
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+import { Avatar } from 'antd';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -11,10 +14,14 @@ import {
   removeMessage,
   sendMessage,
 } from '../../../api/Chat/chat';
+import { getUser } from '../../../api/Users/user.api';
 import { useChat } from '../../../context/app.context';
-import { getUserLocal } from '../../../helper';
+import { getUserLocal, randomColor } from '../../../helper';
 import { RootState } from '../../../stores/store';
 import { Roles } from '../../../type/role.enum';
+import DropdownRemove from './Dropdown/DropdownRemove';
+import DropdownRemoveEdit from './Dropdown/DropdownRemoveEdit';
+import HeaderChat from './HeaderChat';
 
 type Inputs = {
   newMessage: string;
@@ -26,7 +33,6 @@ const ChatComponent = () => {
   const user = getUserLocal();
   const { socket: currentSocket } = useSelector((state: RootState) => state.socket);
   const { register, handleSubmit, reset } = useForm<Inputs>();
-  const [idInsertComment, setInsertComment] = useState<string>('');
 
   useEffect(() => {
     if (roomId) {
@@ -44,17 +50,16 @@ const ChatComponent = () => {
       currentSocket?.on(
         'sendDataServer',
         (data: {
-          receiveId: string;
+          senderId: string;
           content: string;
           roomId: string;
           messageId: string;
         }) => {
-          const { content, receiveId, roomId: roomIdRerturn, messageId } = data;
+          const { content, senderId, roomId: roomIdRerturn, messageId } = data;
           const rId = localStorage.getItem('roomId');
 
           if (roomIdRerturn === rId) {
-            handleAppendMessage(receiveId, content, messageId);
-            console.log(333, messageId);
+            handleAppendMessage(senderId, content, messageId);
           }
         },
       );
@@ -72,19 +77,8 @@ const ChatComponent = () => {
       };
       //insert message
       const { data: messageReturn } = await sendMessage(values);
-
       //append vao mang tin nhan
-      const _id = String(new Date().getTime());
-      handleAppendMessage(user._id, newMessage, _id);
-      setInsertComment(messageReturn._id);
-      setMessages((prev: any) => {
-        const item = prev.find((message: any) => message._id === _id);
-        if (item) {
-          item._id = messageReturn._id;
-        }
-
-        return [...prev];
-      });
+      handleAppendMessage(user._id, newMessage, messageReturn._id);
       //gui len socket
       currentSocket.emit('sendMessage', {
         senderId: user._id,
@@ -96,13 +90,15 @@ const ChatComponent = () => {
     }
   };
 
-  const handleAppendMessage = (userId: string, content: string, _id: string) => {
+  const handleAppendMessage = async (userId: string, content: string, _id: string) => {
+    const user = await getUser(userId);
     const messageAppend = {
       _id,
       content: content,
       createdAt: new Date(),
       createdBy: {
         _id: userId,
+        name: user.data.name,
       },
     };
     setMessages((prev: any) => {
@@ -119,77 +115,85 @@ const ChatComponent = () => {
   };
 
   return (
-    <div className="bg-gray-100 flex-grow flex flex-col p-3">
-      <span className="mb-4 text-xl">{title}</span>
-      <ScrollToBottom className="border border-gray-300 flex-grow mb-4 p-2 overflow-y-scroll">
-        {messages.map((message: MessageType) => (
-          <div
-            key={message._id}
-            className={`flex ${
-              message.createdBy._id === user._id ? 'justify-end' : 'justify-start'
-            } mb-2  items-center`}
-          >
-            {Number(user.role) === Roles.ADMIN && message.createdBy._id === user._id && (
-              <>
-                <DeleteOutlined
-                  onClick={() => handleRemoveMessage(message._id)}
-                  className="pr-2 cursor-pointer"
-                />
-              </>
-            )}
+    <>
+      <div className="bg-gray-100 flex-grow flex flex-col p-3">
+        <HeaderChat roomId={roomId as string} title={title} />
 
-            <div className="flex items-end">
-              {!(message.createdBy._id === user._id) && (
-                <div className="w-8 h-8 rounded-full mr-2 overflow-hidden flex-shrink-0 mb-4">
-                  <img src={'https://via.placeholder.com/50x50'} alt="Avatar" />
-                </div>
-              )}
-              <div>
-                {!(message.createdBy._id === user._id) && (
-                  <span className="text-xs text-gray-500 mt-1">
-                    {message.createdBy.name}
-                  </span>
-                )}
-
-                <div
-                  className={`${
-                    message.createdBy._id === user._id ? 'bg-blue-500' : 'bg-gray-300'
-                  } rounded-lg py-2 px-4 text-gray-900 max-w-xs break-words`}
-                >
-                  {message.content}
-                </div>
-                <div className="text-xs text-gray-500 mt-1">
-                  {dayjs(message.createdAt).format('DD/MM/YYYY HH:mm:ss')}
-                </div>
-              </div>
-
-              {Number(user.role) === Roles.ADMIN &&
-                message.createdBy._id !== user._id && (
-                  <DeleteOutlined
-                    onClick={() => handleRemoveMessage(message._id)}
-                    className="pb-4 pl-2 cursor-pointer"
+        <ScrollToBottom className="border border-gray-300 flex-grow mb-4 p-2 overflow-y-scroll">
+          {messages.map((message: MessageType) => (
+            <div
+              key={message._id}
+              className={`flex ${
+                message.createdBy._id === user._id ? 'justify-end' : 'justify-start'
+              } mb-2  items-center`}
+            >
+              {Number(user.role) === Roles.ADMIN && message.createdBy._id === user._id && (
+                <>
+                  <DropdownRemoveEdit
+                    messageId={message._id}
+                    handleRemoveMessage={handleRemoveMessage}
                   />
+                </>
+              )}
+
+              <div className="flex items-end">
+                {!(message.createdBy._id === user._id) && (
+                  <div className="w-8 h-8 rounded-full mr-2 overflow-hidden flex-shrink-0 mb-5">
+                    <Avatar style={{ backgroundColor: randomColor(), fontSize: '18px' }}>
+                      {message.createdBy.name.charAt(0)}
+                    </Avatar>
+                  </div>
                 )}
+                <div>
+                  {!(message.createdBy._id === user._id) && (
+                    <span className="text-xs text-gray-500 mt-1">
+                      {message.createdBy.name}
+                    </span>
+                  )}
+
+                  <div
+                    className={`${
+                      message.createdBy._id === user._id ? 'bg-blue-500' : 'bg-gray-300'
+                    } rounded-lg py-2 px-4 text-gray-900 max-w-xs break-words`}
+                  >
+                    {message.content}
+                  </div>
+                  <div className="text-xs text-gray-500 mt-1">
+                    {dayjs(message.createdAt).format('DD/MM/YYYY HH:mm:ss')}
+                  </div>
+                </div>
+
+                {Number(user.role) === Roles.ADMIN &&
+                  message.createdBy._id !== user._id && (
+                    <DropdownRemove
+                      handleRemoveMessage={handleRemoveMessage}
+                      messageId={message._id}
+                    />
+                  )}
+              </div>
             </div>
-          </div>
-        ))}
-      </ScrollToBottom>
-      <div className="flex">
-        <form onSubmit={handleSubmit(onSubmit)} className="flex-grow flex items-stretch">
-          <input
-            type="text"
-            placeholder="Type your message"
-            className="w-full border border-gray-300 py-3 px-4"
-            // value={newMessage}
-            {...register('newMessage')}
-          />
-          <input
-            type="submit"
-            className="bg-blue-500 text-white py-3 px-6 rounded ml-2"
-          />
-        </form>
+          ))}
+        </ScrollToBottom>
+        <div className="flex">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex-grow flex items-stretch"
+          >
+            <input
+              type="text"
+              placeholder="Type your message"
+              className="w-full border border-gray-300 py-3 px-4"
+              // value={newMessage}
+              {...register('newMessage')}
+            />
+            <input
+              type="submit"
+              className="bg-blue-500 text-white py-3 px-6 rounded ml-2"
+            />
+          </form>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

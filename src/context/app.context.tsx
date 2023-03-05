@@ -30,6 +30,8 @@ interface ChatState {
   setGroupName: any;
   title: any;
   setTitle: any;
+  isModalSettingGroup: any;
+  setModalSettingGroup: any;
 }
 
 export const ChatContext = React.createContext<ChatState>({
@@ -58,6 +60,8 @@ export const ChatContext = React.createContext<ChatState>({
   setGroupName: undefined,
   title: undefined,
   setTitle: undefined,
+  isModalSettingGroup: undefined,
+  setModalSettingGroup: undefined,
 });
 
 export enum SCREEN_TYPE {
@@ -78,6 +82,7 @@ const ChatProvider = ({ children }: any) => {
   const [listUsersGroup, setListUserGroup] = useState<string[]>([]);
   const [groupName, setGroupName] = useState<string>('');
   const [title, setTitle] = useState<string>('');
+  const [isModalSettingGroup, setModalSettingGroup] = useState(false);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -117,6 +122,8 @@ const ChatProvider = ({ children }: any) => {
     setGroupName,
     title,
     setTitle,
+    isModalSettingGroup,
+    setModalSettingGroup,
   };
 
   return <ChatContext.Provider value={values}>{children}</ChatContext.Provider>;

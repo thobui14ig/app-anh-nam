@@ -3,8 +3,8 @@
 import { useChat } from '../../../../context/app.context';
 import { getUserLocal } from '../../../../helper';
 import { Roles } from '../../../../type/role.enum';
+import ModalCreateMessageUser from '../Modal/ModalCreateMessage';
 import ListMessageUser from './ListMessageUsers';
-import ModalCreateMessageUser from './ModalCreateMessage';
 
 const ListMessage = () => {
   const user = getUserLocal();

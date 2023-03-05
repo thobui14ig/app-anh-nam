@@ -1,11 +1,41 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-import { Avatar } from 'antd';
+import {
+  DeleteOutlined,
+  DownOutlined,
+  EditOutlined,
+  SmileOutlined,
+} from '@ant-design/icons';
+import { Avatar, Dropdown, MenuProps, Space } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
 
 import { getListChatUser } from '../../../../api/Chat/chat';
 import { useChat } from '../../../../context/app.context';
 import useUserOnline from '../../modules/useUserOnline';
+
+const items: MenuProps['items'] = [
+  {
+    key: 'delete',
+    danger: true,
+    label: (
+      <span className="flex justify-center items-center">
+        Xoá
+        <DeleteOutlined className="pl-2" />
+      </span>
+    ),
+  },
+  {
+    key: 'edit',
+    label: (
+      <span className="flex justify-center items-center">
+        Edit
+        <EditOutlined className="pl-2" />
+      </span>
+    ),
+  },
+];
 
 const ListMessageUsers = () => {
   const { listUsers, currentUser, selectedUser, isRenderListMessage } = useChat();
@@ -62,7 +92,7 @@ const ListMessageUsers = () => {
               className={
                 selectedUser === item.id
                   ? 'text-gray-600 mb-2 p-3 pl-1 rounded-md cursor-pointer bg-sky-400'
-                  : 'text-gray-600 mb-2 hover:bg-sky-200 p-3 pl-1 rounded-md cursor-pointer '
+                  : 'text-gray-600 mb-2 hover:bg-sky-200 p-3 pl-1 rounded-md cursor-pointer'
               }
               onClick={() => handleOnclick(item.id)}
               style={{ justifyContent: 'center', alignItems: 'center' }}

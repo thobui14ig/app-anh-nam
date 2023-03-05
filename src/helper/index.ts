@@ -20,4 +20,14 @@ const getUserLocal = (): {
   return JSON.parse(localStorage.getItem('userInfo') as string);
 };
 
-export { getToken, getUserLocal, hasmapUser };
+function randomColor() {
+  // Generate a random hex value between 0x000000 and 0xFFFFFF
+  const hex = Math.floor(Math.random() * 0xffffff);
+
+  // Convert the hex value to a 6-digit string
+  const color = '#' + hex.toString(16).padStart(6, '0');
+
+  return color;
+}
+
+export { getToken, getUserLocal, hasmapUser, randomColor };
