@@ -2,40 +2,13 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-import {
-  DeleteOutlined,
-  DownOutlined,
-  EditOutlined,
-  SmileOutlined,
-} from '@ant-design/icons';
-import { Avatar, Dropdown, MenuProps, Space } from 'antd';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { Avatar, MenuProps } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
 
 import { getListChatUser } from '../../../../api/Chat/chat';
 import { useChat } from '../../../../context/app.context';
 import useUserOnline from '../../modules/useUserOnline';
-
-const items: MenuProps['items'] = [
-  {
-    key: 'delete',
-    danger: true,
-    label: (
-      <span className="flex justify-center items-center">
-        Xoá
-        <DeleteOutlined className="pl-2" />
-      </span>
-    ),
-  },
-  {
-    key: 'edit',
-    label: (
-      <span className="flex justify-center items-center">
-        Edit
-        <EditOutlined className="pl-2" />
-      </span>
-    ),
-  },
-];
 
 const ListMessageUsers = () => {
   const { listUsers, currentUser, selectedUser, isRenderListMessage } = useChat();

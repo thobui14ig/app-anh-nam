@@ -13,6 +13,7 @@ export interface UserInfoType {
   updatedAt: string;
   password: string;
   refreshToken: string;
+  role: number;
 }
 
 const refresh = localStorage.getItem('refreshToken');
