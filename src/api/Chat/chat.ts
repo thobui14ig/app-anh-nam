@@ -12,6 +12,7 @@ interface UserOnlineType {
 export interface MessagesType {
   _id: string;
   messages: MessageType[];
+  type: string;
 }
 
 export interface MessageType {

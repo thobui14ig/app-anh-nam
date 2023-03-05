@@ -8,7 +8,7 @@ import ListMessageUser from './ListMessageUsers';
 
 const ListMessage = () => {
   const user = getUserLocal();
-  const { showModal } = useChat();
+  const { showModal, setListUserGroup, setGroupName } = useChat();
   return (
     <>
       <div className="bg-gray-200 w-1/4 p-1 overflow-y-scroll">
@@ -23,7 +23,11 @@ const ListMessage = () => {
           {Number(user.role) === Roles.ADMIN ? (
             <button
               className="text-gray-700 font-medium pb-2"
-              onClick={() => showModal()}
+              onClick={() => {
+                showModal();
+                setListUserGroup([]);
+                setGroupName('');
+              }}
             >
               +
             </button>

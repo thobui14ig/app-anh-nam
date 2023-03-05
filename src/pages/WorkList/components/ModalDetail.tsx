@@ -56,7 +56,7 @@ const ModalDetails = ({ dataModal }: DATAMODAL) => {
   }, [isModalDetailOpen]);
 
   const onRemove = (file: any) => {
-    return deleteFile(file._id, dataModal._id);
+    deleteFile(file._id, dataModal._id);
   };
 
   return (

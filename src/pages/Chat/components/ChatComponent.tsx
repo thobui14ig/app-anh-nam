@@ -33,11 +33,13 @@ const ChatComponent = () => {
   const user = getUserLocal();
   const { socket: currentSocket } = useSelector((state: RootState) => state.socket);
   const { register, handleSubmit, reset } = useForm<Inputs>();
+  const [typeRoom, setTypeRoom] = useState('user');
 
   useEffect(() => {
     if (roomId) {
       const fetch = async () => {
         const { data } = await getMessages(roomId as string);
+        setTypeRoom(data.type);
         setMessages(data?.messages);
       };
 
@@ -60,6 +62,26 @@ const ChatComponent = () => {
 
           if (roomIdRerturn === rId) {
             handleAppendMessage(senderId, content, messageId);
+          }
+        },
+      );
+    }
+  }, [currentSocket]);
+
+  useEffect(() => {
+    if (currentSocket) {
+      currentSocket?.on(
+        'sendDataServerRemoveMessage',
+        (data: { roomId: string; messageId: string }) => {
+          const { messageId, roomId } = data;
+          console.log(3333, messageId, roomId);
+          const rId = localStorage.getItem('roomId');
+
+          if (roomId === rId) {
+            setMessages((prev: any) => {
+              const newMessages = prev.filter((item: any) => item._id !== messageId);
+              return newMessages;
+            });
           }
         },
       );
@@ -106,18 +128,23 @@ const ChatComponent = () => {
     });
   };
 
-  const handleRemoveMessage = (id: string) => {
+  const handleRemoveMessage = async (id: string) => {
     setMessages((prev: any) => {
       const lists = prev.filter((message: any) => message._id !== id);
       return [...lists];
     });
-    return removeMessage(id, roomId as string);
+    await removeMessage(id, roomId as string);
+    currentSocket.emit('removeMessage', {
+      receiveIds,
+      roomId,
+      messageId: id,
+    });
   };
 
   return (
     <>
       <div className="bg-gray-100 flex-grow flex flex-col p-3">
-        <HeaderChat roomId={roomId as string} title={title} />
+        <HeaderChat roomId={roomId as string} title={title} typeRoom={typeRoom} />
 
         <ScrollToBottom className="border border-gray-300 flex-grow mb-4 p-2 overflow-y-scroll">
           {messages.map((message: MessageType) => (

@@ -10,7 +10,7 @@ const DropdownRemoveEdit = ({ messageId, handleRemoveMessage }: any) => {
       label: (
         <span
           className="flex justify-center items-center"
-          // onClick={() => handleRemoveMessage(messageId)}
+          onClick={() => alert('Đang phát triển')}
         >
           Edit
           <EditOutlined className="pl-2" />

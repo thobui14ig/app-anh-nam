@@ -17,8 +17,6 @@ export default function CreateMessageRoom() {
   } = useChat();
   const admin = isAdmin();
 
-  console.log(222, admin);
-
   const renderUsers = () => {
     return (
       <>

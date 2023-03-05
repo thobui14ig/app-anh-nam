@@ -27,7 +27,11 @@ const useLogin = () => {
       }
       localStorage.setItem('accessToken', data.accessToken);
       localStorage.setItem('userInfo', JSON.stringify(data?.user));
-      window.location.href = ApiConstant.BASE_CLIENT_URL;
+      if (Number(data.user.role) === 1) {
+        window.location.href = ApiConstant.REDIRECT_ADMIN;
+      } else {
+        window.location.href = ApiConstant.REDIRECT_USER;
+      }
     } catch (err: any) {
       toast(err?.response?.data);
     }
