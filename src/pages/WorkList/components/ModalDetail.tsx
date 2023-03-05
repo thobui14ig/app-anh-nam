@@ -15,7 +15,6 @@ interface DATAMODAL {
 const ModalDetails = ({ dataModal }: DATAMODAL) => {
   const { isModalDetailOpen, setIsModalDetailOpen, user } = useWorkList();
   const [fileList, setFileList] = useState<UploadFile[]>();
-  console.log(3333, fileList);
 
   const handleChange: UploadProps['onChange'] = (info) => {
     let newFileList = [...info.fileList];

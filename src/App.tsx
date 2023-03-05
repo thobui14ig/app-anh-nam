@@ -12,7 +12,7 @@ import { useRoutes } from 'react-router';
 import { getUsers } from './api/Users/user.api';
 import Header from './components/Header/Header';
 import LeftMenu from './components/LeftMenu';
-import { hasmapUser } from './helper';
+import { getUserLocal, hasmapUser } from './helper';
 import Login from './pages/Auth/Login';
 import LayoutChat from './pages/Chat/Layout';
 import ReportLayout from './pages/Task';
@@ -20,11 +20,16 @@ import Users from './pages/Users';
 import WorkListLayout from './pages/WorkList';
 import useSocket from './Socket/useSocket';
 import { setListUsers, setUsers } from './stores/resource-store';
+import { Roles } from './type/role.enum';
 
 function App() {
   const dispatch = useDispatch();
 
   const elements = useRoutes([
+    {
+      path: '/',
+      element: <Ridirect />,
+    },
     {
       path: '/users',
       element: <Users />,
@@ -71,3 +76,8 @@ function App() {
 }
 
 export default App;
+
+const Ridirect = () => {
+  const user = getUserLocal();
+  return <>{Number(user.role) === Roles.ADMIN ? <ReportLayout /> : <WorkListLayout />}</>;
+};

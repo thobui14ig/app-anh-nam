@@ -7,7 +7,7 @@ import ApiConstant from '../../../api/apiConstant';
 import { login } from '../../../api/Auth/auth.api';
 
 const useLogin = () => {
-  const [username, setUsername] = useState('thobui1');
+  const [username, setUsername] = useState('admin');
   const [password, setPassword] = useState('111111');
 
   const handleGetUsername = (e: React.ChangeEvent<HTMLInputElement>) => {

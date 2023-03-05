@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
@@ -28,7 +29,7 @@ type Inputs = {
 };
 
 const ChatComponent = () => {
-  const { roomId, receiveIds, title } = useChat();
+  const { roomId, receiveIds, title, setReloadListMessage } = useChat();
   const [messages, setMessages] = useState<MessageType[]>([]);
   const user = getUserLocal();
   const { socket: currentSocket } = useSelector((state: RootState) => state.socket);
@@ -59,6 +60,7 @@ const ChatComponent = () => {
         }) => {
           const { content, senderId, roomId: roomIdRerturn, messageId } = data;
           const rId = localStorage.getItem('roomId');
+          setReloadListMessage(new Date().getTime());
 
           if (roomIdRerturn === rId) {
             handleAppendMessage(senderId, content, messageId);
@@ -74,7 +76,6 @@ const ChatComponent = () => {
         'sendDataServerRemoveMessage',
         (data: { roomId: string; messageId: string }) => {
           const { messageId, roomId } = data;
-          console.log(3333, messageId, roomId);
           const rId = localStorage.getItem('roomId');
 
           if (roomId === rId) {

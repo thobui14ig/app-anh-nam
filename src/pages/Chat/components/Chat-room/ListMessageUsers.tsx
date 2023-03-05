@@ -2,16 +2,18 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Avatar, MenuProps } from 'antd';
+import { Avatar } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
 
 import { getListChatUser } from '../../../../api/Chat/chat';
 import { useChat } from '../../../../context/app.context';
 import useUserOnline from '../../modules/useUserOnline';
+import avatarGroup from './../img/group.png';
+import avatarUser from './../img/user.png';
 
 const ListMessageUsers = () => {
-  const { listUsers, currentUser, selectedUser, isRenderListMessage } = useChat();
+  const { listUsers, currentUser, selectedUser, isRenderListMessage, reloadListMessage } =
+    useChat();
   const { handleGetCurrentChat } = useUserOnline();
   const [listChats, setListChats] = useState([]);
   const [flag, setFlag] = useState(true);
@@ -44,7 +46,7 @@ const ListMessageUsers = () => {
       setListChats(data.data.listChats);
     };
     fetch();
-  }, [isRenderListMessage]);
+  }, [isRenderListMessage, reloadListMessage]);
 
   useEffect(() => {
     if (list.length > 0 && flag) {
@@ -70,15 +72,16 @@ const ListMessageUsers = () => {
               onClick={() => handleOnclick(item.id)}
               style={{ justifyContent: 'center', alignItems: 'center' }}
             >
-              <Avatar
-                size={50}
-                src={'https://robohash.org/user123.png?size=64x64&set=set4'}
-              />
+              {item.type === 'group' ? (
+                <Avatar size={50} src={avatarGroup} style={{ background: '#c4c6cb' }} />
+              ) : (
+                <Avatar size={50} src={avatarUser} style={{ background: '#c4c6cb' }} />
+              )}
 
               {item.type === 'group' ? (
-                <span className="pl-2">{item.name}</span>
+                <span className="pl-2 text-xl font-bold">{item.name}</span>
               ) : (
-                <span className="pl-2">{listUsers[item.name]}</span>
+                <span className="pl-2 text-xl font-bold">{listUsers[item.name]}</span>
               )}
             </li>
           );
