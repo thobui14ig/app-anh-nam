@@ -90,7 +90,11 @@ function Task() {
 
   const customIsUpload = (value: any) => {
     return (
-      <div style={{ backgroundColor: value ? '#4CAF50' : '#f44336' }}>
+      <div
+        style={{
+          backgroundColor: value.data.isUpload ? '#4CAF50' : 'rgb(255 11 11 / 69%)',
+        }}
+      >
         {value.data.isUpload ? 'Đã report' : 'No'}
       </div>
     );
@@ -98,7 +102,11 @@ function Task() {
 
   const customIsSuccess = (value: any) => {
     return (
-      <div style={{ backgroundColor: value ? '#4CAF50' : '#f44336' }}>
+      <div
+        style={{
+          backgroundColor: value.data.success ? '#4CAF50' : 'rgb(255 11 11 / 69%)',
+        }}
+      >
         {value.data.success ? 'Đã xong' : 'No'}
       </div>
     );

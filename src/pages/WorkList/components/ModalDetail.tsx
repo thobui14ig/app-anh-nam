@@ -1,11 +1,11 @@
 import { UploadOutlined } from '@ant-design/icons';
 import type { UploadProps } from 'antd';
 import { Button, Modal, Upload } from 'antd';
-import type { UploadFile } from 'antd/es/upload/interface';
+import type { RcFile, UploadFile } from 'antd/es/upload/interface';
 import React, { useEffect, useState } from 'react';
 
 import ApiConstant from '../../../api/apiConstant';
-import { getFiles } from '../../../api/Tasks/tasks.api';
+import { deleteFile, getFiles } from '../../../api/Tasks/tasks.api';
 import { useWorkList } from '../../../context/work-list.context';
 import TASKLIST from '../../../type/task.type';
 interface DATAMODAL {
@@ -15,6 +15,7 @@ interface DATAMODAL {
 const ModalDetails = ({ dataModal }: DATAMODAL) => {
   const { isModalDetailOpen, setIsModalDetailOpen, user } = useWorkList();
   const [fileList, setFileList] = useState<UploadFile[]>();
+  console.log(3333, fileList);
 
   const handleChange: UploadProps['onChange'] = (info) => {
     let newFileList = [...info.fileList];
@@ -46,17 +47,6 @@ const ModalDetails = ({ dataModal }: DATAMODAL) => {
   }, [isModalDetailOpen]);
 
   useEffect(() => {
-    setFileList([
-      {
-        uid: '-1',
-        name: 'xxx.png',
-        // status: 'done',
-        // url: 'http://www.baidu.com/xxx.png',
-      },
-    ]);
-  }, []);
-
-  useEffect(() => {
     const fetch = async () => {
       const { data: listFiles } = await getFiles(dataModal._id);
       setFileList(listFiles.attachments);
@@ -64,6 +54,10 @@ const ModalDetails = ({ dataModal }: DATAMODAL) => {
 
     fetch();
   }, [isModalDetailOpen]);
+
+  const onRemove = (file: any) => {
+    return deleteFile(file._id, dataModal._id);
+  };
 
   return (
     <Modal
@@ -130,7 +124,7 @@ const ModalDetails = ({ dataModal }: DATAMODAL) => {
           <label htmlFor="message" className="font-medium">
             Files:
           </label>
-          <Upload {...props} fileList={fileList}>
+          <Upload {...props} fileList={fileList} onRemove={onRemove}>
             <Button icon={<UploadOutlined />}>Upload</Button>
           </Upload>
         </div>
