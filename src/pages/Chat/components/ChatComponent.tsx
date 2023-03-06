@@ -110,6 +110,7 @@ const ChatComponent = () => {
         roomId,
         messageId: messageReturn._id,
       });
+      setReloadListMessage(new Date().getTime());
     }
   };
 
