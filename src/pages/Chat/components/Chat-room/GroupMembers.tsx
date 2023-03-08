@@ -18,12 +18,6 @@ const GroupMembers = ({ users }: { roomId: string; users: any }) => {
             </Avatar>
           );
         })}
-      {/* <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
-      <Avatar style={{ backgroundColor: '#f56a00' }}>K</Avatar>
-      <Avatar style={{ backgroundColor: '#1890ff' }} icon={<AntDesignOutlined />} />
-      <Avatar style={{ backgroundColor: '#1890ff' }} icon={<AntDesignOutlined />} />
-
-      <Avatar style={{ backgroundColor: '#1890ff' }} icon={<AntDesignOutlined />} /> */}
     </Avatar.Group>
   );
 };

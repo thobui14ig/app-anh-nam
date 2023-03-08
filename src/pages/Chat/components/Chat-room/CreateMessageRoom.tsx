@@ -14,6 +14,8 @@ export default function CreateMessageRoom() {
     setListUserGroup,
     groupName,
     setGroupName,
+    listUsersGroupDelete,
+    setListUserGroupDelete,
   } = useChat();
   const admin = isAdmin();
 
@@ -35,6 +37,10 @@ export default function CreateMessageRoom() {
   };
 
   function handleChange(value: string) {
+    setListUserGroupDelete((prev: any) => {
+      const newList = prev.filter((item: any) => item !== value);
+      return [...newList];
+    });
     setListUserGroup((prev: any) => {
       const check = prev.find((item: any) => item === value);
       if (!check) {
@@ -47,6 +53,7 @@ export default function CreateMessageRoom() {
   const handleRemoveUserGroup = (id: string) => {
     setListUserGroup((prev: any) => {
       const newList = prev.filter((item: any) => item !== id);
+      setListUserGroupDelete([...listUsersGroupDelete, id]);
       return [...newList];
     });
   };

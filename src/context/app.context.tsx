@@ -34,6 +34,10 @@ interface ChatState {
   setModalSettingGroup: any;
   reloadListMessage: any;
   setReloadListMessage: any;
+  listUsersGroupDelete: any;
+  setListUserGroupDelete: any;
+  listChatsApp: any;
+  setListChatsApp: any;
 }
 
 export const ChatContext = React.createContext<ChatState>({
@@ -66,6 +70,10 @@ export const ChatContext = React.createContext<ChatState>({
   setModalSettingGroup: undefined,
   reloadListMessage: undefined,
   setReloadListMessage: undefined,
+  listUsersGroupDelete: undefined,
+  setListUserGroupDelete: undefined,
+  listChatsApp: undefined,
+  setListChatsApp: undefined,
 });
 
 export enum SCREEN_TYPE {
@@ -84,10 +92,12 @@ const ChatProvider = ({ children }: any) => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [isRenderListMessage, setIsRenderListMessage] = useState(false);
   const [listUsersGroup, setListUserGroup] = useState<string[]>([]);
+  const [listUsersGroupDelete, setListUserGroupDelete] = useState<string[]>([]);
   const [groupName, setGroupName] = useState<string>('');
   const [title, setTitle] = useState<string>('');
   const [isModalSettingGroup, setModalSettingGroup] = useState(false);
   const [reloadListMessage, setReloadListMessage] = useState(new Date().getTime());
+  const [listChatsApp, setListChatsApp] = useState([]);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -131,6 +141,10 @@ const ChatProvider = ({ children }: any) => {
     setModalSettingGroup,
     reloadListMessage,
     setReloadListMessage,
+    listUsersGroupDelete,
+    setListUserGroupDelete,
+    listChatsApp,
+    setListChatsApp,
   };
 
   return <ChatContext.Provider value={values}>{children}</ChatContext.Provider>;

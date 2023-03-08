@@ -47,3 +47,8 @@ export const getUsersInRoom = (roomId: string) =>
   http.get<any>(`/chat-room/get-users/${roomId}`);
 export const setIsReadTrue = (roomId: string) =>
   http.patch<any>(`/chat-room/set-is-read/${roomId}`);
+
+export const editRoom = (roomId: string, values: any) =>
+  http.post<any>(`/chat-room/edit-group/${roomId}`, values);
+export const removeRoom = (roomId: string) =>
+  http.delete<any>(`/chat-room/remove-group/${roomId}`);

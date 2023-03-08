@@ -1,10 +1,12 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import { DeleteOutlined, SettingOutlined } from '@ant-design/icons';
-import React, { useEffect, useState } from 'react';
+import { Dropdown, MenuProps } from 'antd';
+import { useEffect, useState } from 'react';
 
-import { getUsersInRoom } from '../../../api/Chat/chat';
+import { getUsersInRoom, removeRoom } from '../../../api/Chat/chat';
 import { useChat } from '../../../context/app.context';
+import useUserOnline from '../modules/useUserOnline';
 import GroupMembers from './Chat-room/GroupMembers';
 import ModalSettingGroup from './Modal/ModalSettingGroup';
 
@@ -17,8 +19,31 @@ export default function HeaderChat({
   title: string;
   typeRoom: string;
 }) {
-  const { setModalSettingGroup, setGroupName, setListUserGroup } = useChat();
+  const {
+    setModalSettingGroup,
+    setGroupName,
+    setListUserGroup,
+    setReloadListMessage,
+    listChatsApp,
+  } = useChat();
+  const { handleGetCurrentChat } = useUserOnline();
   const [users, setUsers] = useState([]);
+  const handleRemoveRoom = async () => {
+    await removeRoom(roomId);
+    await setReloadListMessage(new Date().getTime());
+    handleGetCurrentChat(listChatsApp[0]._id);
+  };
+  const items: MenuProps['items'] = [
+    {
+      label: <span onClick={() => handleRemoveRoom()}>Xoá trò chuyện</span>,
+      key: '0',
+    },
+    {
+      label: <span onClick={() => setModalSettingGroup(true)}>Thông tin</span>,
+      key: '1',
+      disabled: typeRoom === 'user' ? true : false,
+    },
+  ];
 
   useEffect(() => {
     const fetch = async () => {
@@ -34,10 +59,6 @@ export default function HeaderChat({
     fetch();
   }, [roomId]);
 
-  const handleRemoveRoom = () => {
-    alert('Đang phát triển');
-  };
-
   return (
     <>
       <div className="flex mb-4 text-xl justify-between items-center">
@@ -45,16 +66,14 @@ export default function HeaderChat({
           <GroupMembers roomId={roomId as string} users={users} />
           <span className="pt-1 pl-3">{title}</span>
         </div>
-        {typeRoom === 'group' ? (
-          <div
-            className="text-3xl cursor-pointer"
-            onClick={() => setModalSettingGroup(true)}
-          >
-            <SettingOutlined />
+        <div className="flex items-center">
+          <div className="pr-7 text-blue-700">Files</div>
+          <div>
+            <Dropdown menu={{ items }} trigger={['click']}>
+              <SettingOutlined className="text-3xl" />
+            </Dropdown>
           </div>
-        ) : (
-          <DeleteOutlined size={20} onClick={handleRemoveRoom} />
-        )}
+        </div>
       </div>
       <ModalSettingGroup />
     </>

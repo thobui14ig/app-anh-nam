@@ -21,17 +21,19 @@ const ListMessageUsers = () => {
     isRenderListMessage,
     reloadListMessage,
     roomId,
+    setListChatsApp,
   } = useChat();
   const { handleGetCurrentChat } = useUserOnline();
   const [listChats, setListChats] = useState([]);
   const [flag, setFlag] = useState(true);
 
   const list = useMemo(() => {
-    return listChats.map((item: any) => {
+    const data = listChats.map((item: any) => {
       let isRead;
       if (roomId === item._id) {
         //nếu user đang ở chính phòng đó thì cũng set isRead bằng true
         // setIsReadTrue(roomId as string);
+        setIsReadTrue(item._id);
         isRead = true;
       } else if (!item?.chatUser?.isRead) {
         isRead = false;
@@ -56,17 +58,21 @@ const ListMessageUsers = () => {
         isRead,
       };
     });
+
+    return data;
   }, [listChats, roomId]);
 
   const handleOnclick = async (userId: any) => {
-    await setIsReadTrue(userId);
-    await handleGetCurrentChat(userId);
+    const SETISREAD = setIsReadTrue(userId);
+    const GETCHAT = handleGetCurrentChat(userId);
+    return Promise.all([SETISREAD, GETCHAT]);
   };
 
   useEffect(() => {
     const fetch = async () => {
       const data = await getListChatUser(currentUser?._id);
 
+      setListChatsApp(data.data.listChats);
       setListChats(data.data.listChats);
     };
     fetch();
