@@ -33,11 +33,10 @@ const ListMessageUsers = () => {
         //nếu user đang ở chính phòng đó thì cũng set isRead bằng true
         // setIsReadTrue(roomId as string);
         isRead = true;
-      } else if (!item?.read) {
+      } else if (!item?.chatUser?.isRead) {
         isRead = false;
       } else {
-        const user = item.read.find((user: any) => user.user === currentUser._id);
-        isRead = user?.isRead;
+        isRead = item?.chatUser?.isRead;
       }
 
       if (item?.type === 'user') {

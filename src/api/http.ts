@@ -15,7 +15,7 @@ class Http {
         x_authorization: this.accessToken,
         Accept: 'application/json',
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + this.accessToken,
+        Authorization: this.accessToken,
       },
       data: {
         refreshToken: this.refreshToken,
