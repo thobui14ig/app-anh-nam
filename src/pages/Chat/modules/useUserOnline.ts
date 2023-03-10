@@ -35,7 +35,7 @@ const useUserOnline = () => {
     }
 
     const { _id: userId } = getUserLocal();
-    const receiveIds = data.users.filter((item: any) => item != userId);
+    const receiveIds = data?.users?.filter((item: any) => item != userId);
     setSelectedUser(data._id);
     setRoomId(data?._id);
     localStorage.setItem('roomId', data?._id);

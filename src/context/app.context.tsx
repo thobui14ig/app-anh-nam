@@ -38,6 +38,8 @@ interface ChatState {
   setListUserGroupDelete: any;
   listChatsApp: any;
   setListChatsApp: any;
+  isModalFiles: any;
+  setModalFiles: any;
 }
 
 export const ChatContext = React.createContext<ChatState>({
@@ -74,6 +76,8 @@ export const ChatContext = React.createContext<ChatState>({
   setListUserGroupDelete: undefined,
   listChatsApp: undefined,
   setListChatsApp: undefined,
+  isModalFiles: undefined,
+  setModalFiles: undefined,
 });
 
 export enum SCREEN_TYPE {
@@ -98,6 +102,7 @@ const ChatProvider = ({ children }: any) => {
   const [isModalSettingGroup, setModalSettingGroup] = useState(false);
   const [reloadListMessage, setReloadListMessage] = useState(new Date().getTime());
   const [listChatsApp, setListChatsApp] = useState([]);
+  const [isModalFiles, setModalFiles] = useState(false);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -145,6 +150,8 @@ const ChatProvider = ({ children }: any) => {
     setListUserGroupDelete,
     listChatsApp,
     setListChatsApp,
+    isModalFiles,
+    setModalFiles,
   };
 
   return <ChatContext.Provider value={values}>{children}</ChatContext.Provider>;

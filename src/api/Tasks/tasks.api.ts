@@ -22,3 +22,5 @@ export const getFiles = (taskId: string) =>
   http.get<any>(`/tasks/get-attachments/${taskId}`);
 export const deleteFile = (fileId: string, taskId: string) =>
   http.delete<any>(`/tasks/remove-file/${fileId}/${taskId}`);
+export const getFilesRoom = (roomId: string) =>
+  http.get<any>(`/chat-room/get-attachments/${roomId}`);
