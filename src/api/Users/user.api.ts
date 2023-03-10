@@ -9,3 +9,7 @@ export const updateUser = (key: string, values: any) =>
 export const deleteUser = (key: string) => http.delete<any>(`/users/${key}`);
 
 export const getUser = (id: string) => http.get<USER_TYPE>(`/users/${id}`);
+
+export const createRoles = (values: any) => http.post<any>(`role/set-roles`, values);
+
+export const getRoles = (id: string) => http.get<any>(`/role/${id}`);
