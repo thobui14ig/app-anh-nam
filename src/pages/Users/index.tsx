@@ -2,6 +2,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import 'devextreme-react/text-area';
 
+import { Button } from 'antd';
 import CustomStore from 'devextreme/data/custom_store';
 import {
   Column,
@@ -17,14 +18,22 @@ import { SimpleItem } from 'devextreme-react/form';
 import React, { useState } from 'react';
 
 import { deleteUser, getUsers, insertUser, updateUser } from '../../api/Users/user.api';
+import { getUserLocal } from '../../helper';
+import { Roles } from '../../type/role.enum';
+import ModalSettingRole from './ModalSettingRole';
 
 const ListRoles = [
   { id: 1, name: 'Admin' },
   { id: 2, name: 'User' },
+  { id: 3, name: 'support Admin' },
 ];
 
 function Users() {
+  const currentUser = getUserLocal();
   let stt = 1;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
+
   const [ordersData] = useState(
     new CustomStore({
       key: '_id',
@@ -65,6 +74,24 @@ function Users() {
       return deleteUser(key);
     }
   }
+
+  const phanquyen = (data: any) => {
+    const handleClick = (id: string) => {
+      setUserId(id);
+      setIsModalOpen(true);
+    };
+    if (data?.data?.data?.role === 3) {
+      return (
+        <div
+          onClick={() => handleClick(data?.data?.data?._id)}
+          className="curasync sor-pointer text-sky-400 cursor-pointer"
+        >
+          Phân quyền
+        </div>
+      );
+    }
+    return <>No</>;
+  };
 
   return (
     <React.Fragment>
@@ -107,7 +134,17 @@ function Users() {
         <Column dataField="role" caption="Role">
           <Lookup dataSource={ListRoles} displayExpr="name" valueExpr="id" />
         </Column>
+        {Number(currentUser.role) === Roles.ADMIN && (
+          <Column caption="Phân quyền" width={120} cellComponent={phanquyen} />
+        )}
       </DataGrid>
+      {userId && (
+        <ModalSettingRole
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+          userId={userId}
+        />
+      )}
     </React.Fragment>
   );
 }
