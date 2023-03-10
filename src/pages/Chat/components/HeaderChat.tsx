@@ -6,8 +6,10 @@ import { useEffect, useState } from 'react';
 
 import { getUsersInRoom, removeRoom } from '../../../api/Chat/chat';
 import { useChat } from '../../../context/app.context';
+import { Roles } from '../../../type/role.enum';
 import useUserOnline from '../modules/useUserOnline';
 import GroupMembers from './Chat-room/GroupMembers';
+import ModalFilesRoom from './Modal/ModalFilesRoom';
 import ModalSettingGroup from './Modal/ModalSettingGroup';
 
 export default function HeaderChat({
@@ -25,9 +27,13 @@ export default function HeaderChat({
     setListUserGroup,
     setReloadListMessage,
     listChatsApp,
+    currentUser,
+    isModalFiles,
+    setModalFiles,
   } = useChat();
   const { handleGetCurrentChat } = useUserOnline();
   const [users, setUsers] = useState([]);
+
   const handleRemoveRoom = async () => {
     await removeRoom(roomId);
     await setReloadListMessage(new Date().getTime());
@@ -67,15 +73,43 @@ export default function HeaderChat({
           <span className="pt-1 pl-3">{title}</span>
         </div>
         <div className="flex items-center">
-          <div className="pr-7 text-blue-700">Files</div>
+          <div
+            className="pr-7 text-blue-700 cursor-pointer"
+            onClick={() => setModalFiles(true)}
+          >
+            Files
+          </div>
           <div>
-            <Dropdown menu={{ items }} trigger={['click']}>
-              <SettingOutlined className="text-3xl" />
-            </Dropdown>
+            {typeRoom === 'group' && currentUser.role === Roles.ADMIN ? (
+              <Dropdown menu={{ items }} trigger={['click']}>
+                <SettingOutlined className="text-3xl" />
+              </Dropdown>
+            ) : currentUser.role === Roles.ADMIN ? (
+              <DeleteOutlined className="text-3xl" onClick={handleRemoveRoom} />
+            ) : (
+              ''
+            )}
           </div>
         </div>
       </div>
+
       <ModalSettingGroup />
+      {roomId && (
+        <ModalFilesRoom
+          isModalFiles={isModalFiles}
+          setModalFiles={setModalFiles}
+          roomId={roomId}
+        />
+      )}
     </>
   );
 }
+// {typeRoom === 'group' ? (
+//   <Dropdown menu={{ items }} trigger={['click']}>
+//     <SettingOutlined className="text-3xl" />
+//   </Dropdown>
+// ) : (
+//   <Dropdown menu={{ items2 }} trigger={['click']}>
+//     <SettingOutlined className="text-3xl" />
+//   </Dropdown>
+// )}
