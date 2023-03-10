@@ -3,6 +3,7 @@ import { Button, Modal, Upload, UploadFile, UploadProps } from 'antd';
 import { useEffect, useState } from 'react';
 
 import ApiConstant from '../../../../api/apiConstant';
+import { deleteFileInRoom } from '../../../../api/Chat/chat';
 import { getFilesRoom } from '../../../../api/Tasks/tasks.api';
 import { useChat } from '../../../../context/app.context';
 
@@ -50,6 +51,10 @@ export default function ModalFilesRoom({ isModalFiles, setModalFiles, roomId }: 
     fetch();
   }, [isModalFiles]);
 
+  const onRemove = (file: any) => {
+    deleteFileInRoom(file._id, roomId);
+  };
+
   return (
     <>
       <Modal
@@ -58,7 +63,7 @@ export default function ModalFilesRoom({ isModalFiles, setModalFiles, roomId }: 
         onOk={() => setModalFiles(false)}
         onCancel={() => setModalFiles(false)}
       >
-        <Upload {...props} fileList={fileList}>
+        <Upload {...props} fileList={fileList} onRemove={onRemove}>
           <Button icon={<UploadOutlined />}>Upload</Button>
         </Upload>
       </Modal>

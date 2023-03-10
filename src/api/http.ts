@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
+import { toast } from 'react-toastify';
 
 import ApiConstant from './apiConstant';
 
@@ -21,6 +22,20 @@ class Http {
         refreshToken: this.refreshToken,
       },
     });
+
+    this.instance.interceptors.response.use(
+      (response) => {
+        return response;
+      },
+      (error) => {
+        if (error.response.status === 403) {
+          toast.error(error?.response?.data?.message);
+        } else if (error.response.status === 500) {
+          // Handle internal server errors
+        }
+        return Promise.reject(error);
+      },
+    );
   }
 }
 

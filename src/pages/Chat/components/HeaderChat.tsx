@@ -85,7 +85,7 @@ export default function HeaderChat({
                 <SettingOutlined className="text-3xl" />
               </Dropdown>
             ) : currentUser.role === Roles.ADMIN ? (
-              <DeleteOutlined className="text-3xl" onClick={handleRemoveRoom} />
+              <DropdownDeleteInUser handleRemoveRoom={handleRemoveRoom} />
             ) : (
               ''
             )}
@@ -104,12 +104,17 @@ export default function HeaderChat({
     </>
   );
 }
-// {typeRoom === 'group' ? (
-//   <Dropdown menu={{ items }} trigger={['click']}>
-//     <SettingOutlined className="text-3xl" />
-//   </Dropdown>
-// ) : (
-//   <Dropdown menu={{ items2 }} trigger={['click']}>
-//     <SettingOutlined className="text-3xl" />
-//   </Dropdown>
-// )}
+
+const DropdownDeleteInUser = ({ handleRemoveRoom }: any) => {
+  const items: MenuProps['items'] = [
+    {
+      label: <span onClick={() => handleRemoveRoom()}>Xoá trò chuyện</span>,
+      key: '0',
+    },
+  ];
+  return (
+    <Dropdown menu={{ items }} trigger={['click']}>
+      <SettingOutlined className="text-3xl" />
+    </Dropdown>
+  );
+};

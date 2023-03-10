@@ -52,3 +52,5 @@ export const editRoom = (roomId: string, values: any) =>
   http.post<any>(`/chat-room/edit-group/${roomId}`, values);
 export const removeRoom = (roomId: string) =>
   http.delete<any>(`/chat-room/remove-group/${roomId}`);
+export const deleteFileInRoom = (fileId: string, roomId: string) =>
+  http.delete<any>(`/chat-room/remove-file/${fileId}/${roomId}`);
