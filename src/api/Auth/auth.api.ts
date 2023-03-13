@@ -24,3 +24,7 @@ export const refreshToken = () =>
   http.post('/auth/refresh', {
     refreshToken: refresh,
   });
+export const resetPassword = (email: string) =>
+  http.post('/auth/reset-password', {
+    email,
+  });
