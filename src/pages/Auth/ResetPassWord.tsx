@@ -2,8 +2,6 @@ import './login.scss';
 
 import { SubmitHandler, useForm } from 'react-hook-form';
 
-import useLogin from './modules/useLogin';
-
 const ResetPassword = () => {
   const { register, handleSubmit } = useForm();
   const onSubmit: SubmitHandler<any> = (data: { username: string; password: string }) =>

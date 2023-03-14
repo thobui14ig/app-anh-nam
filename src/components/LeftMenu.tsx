@@ -11,15 +11,18 @@ const LeftMenu = () => {
     { id: 1, route: 'task', name: 'Giao việc' },
     { id: 2, route: 'message', name: 'Message' },
     { id: 3, route: 'users', name: 'Quản lý nhân viên' },
+    { id: 4, route: 'profile', name: 'Thông tin cá nhân' },
   ];
   const menuSupAdmin = [
     { id: 1, route: 'work-list', name: 'Task' },
     { id: 2, route: 'message', name: 'Message' },
     { id: 3, route: 'users', name: 'Quản lý nhân viên' },
+    { id: 4, route: 'profile', name: 'Thông tin cá nhân' },
   ];
   const menuUser = [
     { id: 1, route: 'work-list', name: 'Task' },
     { id: 2, route: 'message', name: 'Message' },
+    { id: 3, route: 'profile', name: 'Thông tin cá nhân' },
   ];
   const user = getUserLocal();
   const navigate = useNavigate();

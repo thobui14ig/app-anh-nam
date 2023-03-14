@@ -34,8 +34,6 @@ const Login = () => {
     }, 2000);
   };
 
-  // console.log(1111, isValidEmail);
-
   return (
     <div className="container-login">
       <div className="content">

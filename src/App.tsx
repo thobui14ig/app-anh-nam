@@ -15,6 +15,7 @@ import LeftMenu from './components/LeftMenu';
 import { getUserLocal, hasmapUser } from './helper';
 import Login from './pages/Auth/Login';
 import LayoutChat from './pages/Chat/Layout';
+import Profile from './pages/Profile';
 import ReportLayout from './pages/Task';
 import Users from './pages/Users';
 import WorkListLayout from './pages/WorkList';
@@ -45,6 +46,10 @@ function App() {
     {
       path: '/task',
       element: <ReportLayout />,
+    },
+    {
+      path: '/profile',
+      element: <Profile />,
     },
   ]);
 

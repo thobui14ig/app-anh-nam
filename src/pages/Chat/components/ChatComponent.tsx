@@ -1,14 +1,17 @@
+/* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import { Avatar } from 'antd';
+import { Avatar, Upload, UploadProps } from 'antd';
+import { RcFile } from 'antd/es/upload';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import ScrollToBottom from 'react-scroll-to-bottom';
 
+import ApiConstant from '../../../api/apiConstant';
 import {
   getMessages,
   MessageType,
@@ -23,18 +26,20 @@ import { Roles } from '../../../type/role.enum';
 import DropdownRemove from './Dropdown/DropdownRemove';
 import DropdownRemoveEdit from './Dropdown/DropdownRemoveEdit';
 import HeaderChat from './HeaderChat';
+import attachment from './img/attachment.png';
 
 type Inputs = {
   newMessage: string;
 };
 
 const ChatComponent = () => {
-  const { roomId, receiveIds, title, setReloadListMessage } = useChat();
+  const { roomId, receiveIds, title, setReloadListMessage, currentUser } = useChat();
   const [messages, setMessages] = useState<MessageType[]>([]);
   const user = getUserLocal();
   const { socket: currentSocket } = useSelector((state: RootState) => state.socket);
   const { register, handleSubmit, reset } = useForm<Inputs>();
   const [typeRoom, setTypeRoom] = useState('user');
+  const [base64, setBase64] = useState('');
 
   useEffect(() => {
     if (roomId) {
@@ -143,11 +148,34 @@ const ChatComponent = () => {
     });
   };
 
+  const props = {
+    action: `${ApiConstant.BASE_API_URL}/tasks/upload-file-room/${roomId}/${currentUser?._id}`,
+    multiple: true,
+  };
+
+  const getBase64 = (file: RcFile): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
+
+  const handleChange: UploadProps['onChange'] = async (info: any) => {
+    const newFileList = [...info.fileList];
+    if (info.file.status === 'done') {
+      // Handle response here
+      const base64 = await getBase64(info.file.originFileObj as RcFile);
+      setBase64(base64);
+    }
+  };
+
   return (
     <>
       <div className="bg-gray-100 flex-grow flex flex-col p-3">
         <HeaderChat roomId={roomId as string} title={title} typeRoom={typeRoom} />
 
+        {/* <img src={base64} alt="My Image" /> */}
         <ScrollToBottom className="border border-gray-300 flex-grow mb-4 p-2 overflow-y-scroll">
           {messages.map((message: MessageType) => (
             <div
@@ -210,15 +238,20 @@ const ChatComponent = () => {
           >
             <input
               type="text"
-              placeholder="Type your message"
+              placeholder="Nhập tin nhắn"
               className="w-full border border-gray-300 py-3 px-4"
               // value={newMessage}
               {...register('newMessage')}
             />
-            <input
-              type="submit"
-              className="bg-blue-500 text-white py-3 px-6 rounded ml-2"
-            />
+            <div className="flex">
+              <Upload {...props} showUploadList={false} onChange={handleChange}>
+                <img className="h-11 w-11 ml-1" src={attachment} />
+              </Upload>
+              <input
+                type="submit"
+                className="bg-blue-500 text-white py-3 px-6 rounded ml-2"
+              />
+            </div>
           </form>
         </div>
       </div>

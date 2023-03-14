@@ -2,8 +2,6 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-import { NotificationOutlined } from '@ant-design/icons';
-import list from '@fullcalendar/list';
 import { Avatar } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
 
@@ -28,38 +26,41 @@ const ListMessageUsers = () => {
   const [flag, setFlag] = useState(true);
 
   const list = useMemo(() => {
-    const data = listChats.map((item: any) => {
-      let isRead;
-      if (roomId === item._id) {
-        //nếu user đang ở chính phòng đó thì cũng set isRead bằng true
-        // setIsReadTrue(roomId as string);
-        setIsReadTrue(item._id);
-        isRead = true;
-      } else if (!item?.chatUser?.isRead) {
-        isRead = false;
-      } else {
-        isRead = item?.chatUser?.isRead;
-      }
+    if (listChats?.length > 0) {
+      const data = listChats.map((item: any) => {
+        let isRead;
+        if (roomId === item._id) {
+          //nếu user đang ở chính phòng đó thì cũng set isRead bằng true
+          // setIsReadTrue(roomId as string);
+          setIsReadTrue(item._id);
+          isRead = true;
+        } else if (!item?.chatUser?.isRead) {
+          isRead = false;
+        } else {
+          isRead = item?.chatUser?.isRead;
+        }
 
-      if (item?.type === 'user') {
-        const data = item.users.find((user: any) => user !== currentUser._id);
+        if (item?.type === 'user') {
+          const data = item.users.find((user: any) => user !== currentUser._id);
 
+          return {
+            id: item._id,
+            name: data,
+            type: item.type,
+            isRead,
+          };
+        }
         return {
           id: item._id,
-          name: data,
+          name: item.name,
           type: item.type,
           isRead,
         };
-      }
-      return {
-        id: item._id,
-        name: item.name,
-        type: item.type,
-        isRead,
-      };
-    });
+      });
 
-    return data;
+      return data;
+    }
+    return [];
   }, [listChats, roomId]);
 
   const handleOnclick = async (userId: any) => {
